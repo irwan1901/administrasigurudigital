@@ -1,0 +1,1000 @@
+
+<!doctype html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SEKOLAH MAJU : ADMINISTRASI DIGITAL GURU</title>
+  <link rel="stylesheet" href="assets/tailwind.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --glass-opacity: 0.55; --glass-blur: 24px; --accent-color: #007aff; }
+    body { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; transition: color 0.4s, background-color 0.4s; overflow-x: hidden; }
+    .font-orbitron { font-family: 'Orbitron', sans-serif; letter-spacing: 0.5px; }
+    
+    /* Tema Terang */
+    body.theme-light { color: #1d1d1f; background-color: #f5f5f7; }
+    body.theme-light .glass-panel { background: rgba(255, 255, 255, var(--glass-opacity)); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08); }
+    body.theme-light .glass-btn { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.7); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); color: #1d1d1f; transition: all 0.3s ease; }
+    body.theme-light .glass-input { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(8px); border: 1px solid rgba(0, 0, 0, 0.1); color: #1d1d1f; }
+    body.theme-light .glass-input:focus { outline: none; background: rgba(255, 255, 255, 0.8); border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); }
+    body.theme-light .glass-item { background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(255, 255, 255, 0.5); }
+    
+    /* Tema Gelap */
+    body.theme-dark { color: #f5f5f7; background-color: #000; }
+    body.theme-dark .glass-panel { background: rgba(30, 30, 30, var(--glass-opacity)); backdrop-filter: blur(var(--glass-blur)) saturate(180%); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5); }
+    body.theme-dark .glass-btn { background: rgba(50, 50, 50, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); color: #f5f5f7; transition: all 0.3s ease; }
+    body.theme-dark .glass-input { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.15); color: #f5f5f7; }
+    body.theme-dark .glass-input:focus { outline: none; background: rgba(30, 30, 30, 0.6); border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.4); }
+    body.theme-dark .glass-item { background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); }
+
+    .glass-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+    .glass-btn:active { transform: scale(0.96); filter: brightness(0.9); }
+    .glass-card-vibrant { backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.15); transition: transform 0.4s; }
+    .glass-card-vibrant:hover { transform: translateY(-5px) scale(1.02); }
+    
+    /* Backgrounds & Utilities */
+    .dots-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; }
+    #bgOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; background-size: cover; background-position: center; background-attachment: fixed; }
+    #app { position: relative; z-index: 2; }
+    
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 1000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; padding: 1rem; }
+    .modal.active { display: flex; opacity: 1; animation: fadeIn 0.3s ease forwards; }
+    .modal-content { animation: slideUp 0.4s forwards; transform: translateY(30px); opacity: 0; max-height: 90vh; overflow-y: auto; width: 100%; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { to { transform: translateY(0); opacity: 1; } }
+    
+    .digital-clock { font-family: 'Orbitron', monospace; font-weight: 700; font-size: clamp(0.8rem, 2vw, 1.1rem); letter-spacing: 0.1em; background: linear-gradient(180deg, var(--accent-color) 0%, rgba(255,255,255,0.8) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 15px rgba(0, 122, 255, 0.3); }
+    .rainbow-text { background: linear-gradient(90deg, #ff2a2a, #ff7a00, #ffcc00, #00cd00, #0066ff, #5e00ff, #ff2a2a); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradient 4s linear infinite; }
+    @keyframes gradient { 0% { background-position: 0% center; } 100% { background-position: 200% center; } }
+    
+    .theme-switch { position: relative; width: 56px; height: 30px; }
+    .theme-switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; border-radius: 34px; transition: 0.4s; }
+    .slider:before { position: absolute; content: "☀️"; height: 22px; width: 22px; left: 4px; bottom: 4px; border-radius: 50%; transition: 0.4s; display: flex; align-items: center; justify-content: center; font-size: 12px; background: #fff; color: #000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    input:checked + .slider:before { transform: translateX(26px); content: "🌙"; background: #1c1c1e; color: #fff; }
+    .menu-item.active { transform: scale(1.02); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    
+    .profile-frame { border-radius: 50%; overflow: hidden; position: relative; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); }
+    .profile-frame:hover .upload-overlay { opacity: 1; }
+    .upload-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; cursor: pointer; }
+    
+    /* Scroll Settings - Swipe Mulus HP */
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .scroll-smooth { -webkit-overflow-scrolling: touch; scroll-behavior: smooth; touch-action: pan-x pan-y; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(150, 150, 150, 0.4); border-radius: 10px; }
+    
+    .color-option { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; transition: 0.2s; }
+    .color-option:hover { transform: scale(1.15); }
+    .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); padding: 12px 24px; border-radius: 30px; z-index: 2000; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.2); font-weight: 600; font-size: 0.9rem; text-align: center; width: max-content; max-width: 90vw; }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    th, td { border-color: rgba(128, 128, 128, 0.15) !important; padding: 12px 8px; }
+  </style>
+</head>
+<body class="h-full overflow-auto theme-light">
+<canvas id="dotsCanvas" class="dots-bg"></canvas>
+<div id="bgOverlay"></div>
+
+<div id="app" class="min-h-full relative z-10 p-2 md:p-4 lg:p-6 max-w-[1600px] mx-auto">
+  
+  <!-- HEADER RATA KIRI -->
+  <header id="header" class="rounded-3xl p-4 md:p-5 mb-4 md:mb-6 glass-panel flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+    <!-- Kolom Kiri: Profil & Teks -->
+    <div class="flex items-center gap-4 w-full md:w-auto">
+      <div id="profileFrame" class="profile-frame w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 flex-shrink-0 shadow-lg" onclick="openPhotoModal()">
+        <img id="profilePhoto" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
+        <div id="profilePlaceholder" class="w-full h-full flex items-center justify-center text-2xl md:text-4xl text-gray-500"><i class="fas fa-user"></i></div>
+        <div class="upload-overlay"><i class="fas fa-camera text-white text-xl"></i></div>
+      </div>
+      <div class="flex-1 text-left">
+        <h1 id="appTitle" class="font-orbitron font-bold text-lg md:text-2xl lg:text-3xl rainbow-text mb-1 drop-shadow-md">ADMINISTRASI DIGITAL GURU</h1>
+        <div id="headerInfo" class="text-xs md:text-sm flex flex-wrap items-center gap-2 font-medium opacity-80 mb-1.5">
+          <span id="schoolName">Sekolah</span> &bull; <span id="teacherName">Guru</span> &bull; <span id="mottoText" class="italic">"Motto"</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-2 md:gap-3">
+          <div id="digitalClock" class="digital-clock"></div>
+          <div id="headerSemesterInfo"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Kolom Kanan: Tombol Pengaturan -->
+    <div class="flex flex-col items-start md:items-end gap-3 w-full md:w-auto mt-2 md:mt-0">
+      <div class="flex items-center gap-2 md:gap-3 flex-wrap w-full md:w-auto justify-start md:justify-end">
+        <button id="classBtn" onclick="openClassSelectorModal()" class="px-3 py-2 md:px-4 md:py-2.5 rounded-2xl text-xs md:text-sm font-semibold flex items-center gap-2 glass-btn shadow-sm">
+          <i class="fas fa-graduation-cap"></i> <span id="currentClassName" class="max-w-[120px] md:max-w-max truncate">Pilih Kelas</span> <i class="fas fa-chevron-down text-xs ml-1"></i>
+        </button>
+        <button onclick="refreshData()" class="p-2 md:p-2.5 rounded-xl glass-btn" title="Muat Ulang Data"><i class="fas fa-sync-alt"></i></button>
+        <button onclick="saveAllDataManual()" class="p-2 md:p-2.5 rounded-xl glass-btn text-green-500 border-green-500/40 relative" title="Simpan Data"><div class="absolute inset-0 bg-green-500/10 rounded-xl"></div><i class="fas fa-save relative z-10"></i></button>
+        <button onclick="openBackupModal()" class="p-2 md:p-2.5 rounded-xl glass-btn text-blue-500 border-blue-500/40 relative overflow-hidden" title="Backup JSON"><div class="absolute inset-0 bg-blue-500/10"></div><i class="fas fa-download relative z-10 animate-bounce"></i></button>
+        <div class="relative">
+          <button onclick="D('colorPicker').classList.toggle('hidden')" class="p-2 md:p-2.5 rounded-xl glass-btn" title="Ubah Warna Tema"><i class="fas fa-palette"></i></button>
+          <div id="colorPicker" class="absolute top-full right-0 mt-2 p-3 rounded-2xl z-50 hidden glass-panel shadow-2xl flex flex-col gap-2 border border-white/20">
+            <div class="flex gap-2">
+              <div class="color-option bg-[#007aff]" onclick="setAccentColor('#007aff')"></div><div class="color-option bg-[#ff3b30]" onclick="setAccentColor('#ff3b30')"></div><div class="color-option bg-[#34c759]" onclick="setAccentColor('#34c759')"></div><div class="color-option bg-[#ff9500]" onclick="setAccentColor('#ff9500')"></div>
+            </div>
+            <div class="flex gap-2">
+              <div class="color-option bg-[#5856d6]" onclick="setAccentColor('#5856d6')"></div><div class="color-option bg-[#ff2d55]" onclick="setAccentColor('#ff2d55')"></div><input type="color" id="customColor" class="w-6 h-6 rounded-full cursor-pointer shadow-inner" onchange="setAccentColor(this.value)">
+            </div>
+          </div>
+        </div>
+        <label class="theme-switch"><input type="checkbox" id="themeToggle" onchange="toggleTheme()"><span class="slider glass-btn"></span></label>
+        <button onclick="toggleFullscreen()" class="p-2 md:p-2.5 rounded-xl glass-btn hidden sm:block" title="Layar Penuh"><i id="fullscreenIcon" class="fas fa-expand"></i></button>
+      </div>
+      
+      <!-- Zoom Slider -->
+      <div class="flex items-center gap-2 glass-panel px-3 py-1.5 rounded-2xl border border-white/10 shadow-sm w-full md:w-max justify-start md:justify-end">
+        <i class="fas fa-search-minus text-xs opacity-70 cursor-pointer p-1" onclick="D('headerZoomSlider').stepDown();changeAppZoom(D('headerZoomSlider').value)"></i>
+        <input type="range" id="headerZoomSlider" min="50" max="150" value="100" step="5" class="w-full md:w-32 accent-blue-500" oninput="changeAppZoom(this.value)">
+        <i class="fas fa-search-plus text-xs opacity-70 cursor-pointer p-1" onclick="D('headerZoomSlider').stepUp();changeAppZoom(D('headerZoomSlider').value)"></i>
+        <span id="headerZoomValue" class="text-xs font-bold w-10 text-right opacity-80 text-blue-500">100%</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT (MENU & KONTEN) -->
+  <div id="mainLayoutWrapper" class="flex flex-col w-full relative z-10 transition-all duration-300">
+    <!-- Menu Navigasi Swipeable -->
+    <nav id="navMenu" class="rounded-3xl p-2 md:p-2.5 mb-4 md:mb-6 overflow-x-auto scroll-smooth hide-scrollbar glass-panel transition-all duration-300">
+      <div class="flex gap-2 min-w-max pb-1">
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="dashboard" onclick="showMenu('dashboard')"><i class="fas fa-layer-group md:mr-2"></i><span class="hidden md:inline">DASHBOARD</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="absenHarian" onclick="showMenu('absenHarian')"><i class="fas fa-calendar-check md:mr-2"></i><span class="hidden md:inline">ABSEN HARIAN</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="profileGuru" onclick="showMenu('profileGuru')"><i class="fas fa-user-circle md:mr-2"></i><span class="hidden md:inline">PROFILE</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="mataPelajaran" onclick="showMenu('mataPelajaran')"><i class="fas fa-book-open md:mr-2"></i><span class="hidden md:inline">MAPEL</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="dataSiswa" onclick="showMenu('dataSiswa')"><i class="fas fa-user-graduate md:mr-2"></i><span class="hidden md:inline">DATA SISWA</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="nilaiSiswa" onclick="showMenu('nilaiSiswa')"><i class="fas fa-star md:mr-2"></i><span class="hidden md:inline">NILAI SISWA</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="absenSiswa" onclick="showMenu('absenSiswa')"><i class="fas fa-clipboard-list md:mr-2"></i><span class="hidden md:inline">REKAP ABSEN</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="cetakHasil" onclick="showMenu('cetakHasil')"><i class="fas fa-print md:mr-2"></i><span class="hidden md:inline">CETAK</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="rppModul" onclick="showMenu('rppModul')"><i class="fas fa-folder-open md:mr-2"></i><span class="hidden md:inline">RPP / MODUL</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="jurnalGuru" onclick="showMenu('jurnalGuru')"><i class="fas fa-calendar-alt md:mr-2"></i><span class="hidden md:inline">JURNAL & JADWAL</span></button> 
+        <button class="menu-item px-4 md:px-5 py-2 md:py-2.5 rounded-2xl font-bold text-xs md:text-sm glass-btn whitespace-nowrap" data-menu="manajemen" onclick="showMenu('manajemen')"><i class="fas fa-cog md:mr-2"></i><span class="hidden md:inline">PENGATURAN</span></button>
+      </div>
+    </nav>
+
+    <!-- KONTEN APLIKASI -->
+    <main id="contentArea" class="w-full flex-1 rounded-3xl p-4 md:p-6 min-h-[60vh] glass-panel shadow-2xl relative transition-all duration-300 overflow-hidden">
+      
+      <!-- DASHBOARD -->
+      <div id="dashboard" class="menu-content">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6 flex items-center gap-3"><i class="fas fa-layer-group text-blue-500"></i> OVERVIEW DASHBOARD</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 md:gap-5 mb-6">
+          <div class="rounded-3xl p-4 text-center glass-card-vibrant cursor-pointer" style="background: linear-gradient(135deg, rgba(88, 86, 214, 0.7), rgba(102, 126, 234, 0.5));" onclick="lihatDetailSiswaDashboard()"><i class="fas fa-users text-2xl mb-2 text-white opacity-90"></i><div id="totalSiswa" class="font-orbitron font-bold text-3xl text-white">0</div><div class="text-[10px] md:text-xs font-semibold mt-1 text-white opacity-80 uppercase">Total Siswa</div></div>
+          <div class="rounded-3xl p-4 text-center glass-card-vibrant cursor-pointer" style="background: linear-gradient(135deg, rgba(52, 199, 89, 0.7), rgba(46, 204, 113, 0.5));" onclick="lihatDetailSiswaDashboard('L')"><i class="fas fa-male text-2xl mb-2 text-white opacity-90"></i><div id="siswaLaki" class="font-orbitron font-bold text-3xl text-white">0</div><div class="text-[10px] md:text-xs font-semibold mt-1 text-white opacity-80 uppercase">Laki-laki</div></div>
+          <div class="rounded-3xl p-4 text-center glass-card-vibrant cursor-pointer" style="background: linear-gradient(135deg, rgba(255, 45, 85, 0.7), rgba(255, 105, 135, 0.5));" onclick="lihatDetailSiswaDashboard('P')"><i class="fas fa-female text-2xl mb-2 text-white opacity-90"></i><div id="siswaPerempuan" class="font-orbitron font-bold text-3xl text-white">0</div><div class="text-[10px] md:text-xs font-semibold mt-1 text-white opacity-80 uppercase">Perempuan</div></div>
+          <div class="rounded-3xl p-4 text-center glass-card-vibrant cursor-pointer" style="background: linear-gradient(135deg, rgba(255, 149, 0, 0.7), rgba(255, 179, 71, 0.5));" onclick="lihatDetailAbsenDashboard('sakit')"><i class="fas fa-briefcase-medical text-2xl mb-2 text-white opacity-90"></i><div id="totalSakit" class="font-orbitron font-bold text-3xl text-white">0</div><div class="text-[10px] md:text-xs font-semibold mt-1 text-white opacity-80 uppercase">Sakit</div></div>
+          <div class="rounded-3xl p-4 text-center glass-card-vibrant cursor-pointer" style="background: linear-gradient(135deg, rgba(90, 200, 250, 0.7), rgba(54, 209, 220, 0.5));" onclick="lihatDetailAbsenDashboard('izin')"><i class="fas fa-envelope text-2xl mb-2 text-white opacity-90"></i><div id="totalIzin" class="font-orbitron font-bold text-3xl text-white">0</div><div class="text-[10px] md:text-xs font-semibold mt-1 text-white opacity-80 uppercase">Izin</div></div>
+          <div class="rounded-3xl p-4 text-center glass-card-vibrant cursor-pointer" style="background: linear-gradient(135deg, rgba(255, 59, 48, 0.7), rgba(255, 105, 97, 0.5));" onclick="lihatDetailAbsenDashboard('alpa')"><i class="fas fa-times-circle text-2xl mb-2 text-white opacity-90"></i><div id="totalAlpa" class="font-orbitron font-bold text-3xl text-white">0</div><div class="text-[10px] md:text-xs font-semibold mt-1 text-white opacity-80 uppercase">Alpa</div></div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+          <div class="rounded-3xl p-5 md:p-6 glass-item border-l-4 border-blue-500 flex flex-col justify-center shadow-sm">
+            <h3 class="font-orbitron font-bold text-lg mb-2"><i class="fas fa-info-circle text-blue-500 mr-2"></i>Tentang Developer</h3>
+            <p class="opacity-80 mb-4 text-sm leading-relaxed">Aplikasi ini dikembangkan oleh <strong class="text-blue-500">IRWAN A. MAULANA</strong> sebagai project inovasi pendidikan <strong class="rainbow-text">"SEKOLAH MAJU"</strong> semoga bermanfaat bagi rekan guru.</p>
+            <div class="flex flex-col sm:flex-row flex-wrap gap-2 md:gap-3">
+               <a href="https://youtube.com/@AndiAbdiHadi27/" target="_blank" class="flex-1 py-3 rounded-xl font-bold text-white text-center shadow-lg bg-red-600 hover:bg-red-700 text-xs sm:text-sm transition flex justify-center items-center gap-2"><i class="fab fa-youtube"></i>YOUTUBE</a>
+               <button onclick="openWhatsNewModal()" class="flex-1 py-3 rounded-xl font-bold text-white shadow-lg bg-indigo-600 hover:bg-indigo-700 text-xs sm:text-sm transition flex justify-center items-center gap-2"><i class="fas fa-sparkles"></i>FITUR BARU</button>
+               <button onclick="openDonasiModal()" class="w-full sm:w-auto px-5 py-3 rounded-xl font-bold text-white shadow-lg bg-emerald-500 hover:bg-emerald-600 text-xs sm:text-sm transition flex justify-center items-center gap-2"><i class="fas fa-heart"></i>DONASI</button>
+            </div>
+          </div>
+          <div class="rounded-3xl p-5 md:p-6 glass-item border-l-4 border-yellow-500 shadow-sm flex flex-col">
+            <h3 class="font-orbitron font-bold text-lg mb-4 flex items-center gap-2"><i class="fas fa-trophy text-yellow-500"></i>Top 5 Peringkat Kelas</h3>
+            <div id="top5SiswaDashboard" class="space-y-2 flex-1 flex flex-col justify-center"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABSEN HARIAN -->
+      <div id="absenHarian" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-calendar-check text-green-500 mr-2"></i>ABSEN HARIAN SISWA</h2>
+        <div class="rounded-3xl p-4 md:p-5 mb-5 glass-item shadow-sm">
+          <div class="flex flex-col md:flex-row gap-3 md:items-end">
+            <div class="flex-1"><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80"><i class="fas fa-calendar-day text-blue-500 mr-1"></i>Tanggal Absen</label><input type="date" id="absenHarianTanggal" class="w-full p-3 rounded-xl glass-input font-bold" onchange="renderAbsenHarianSiswa()"></div>
+            <button onclick="openCetakAbsenHarian()" class="w-full md:w-auto px-5 py-3 rounded-xl font-bold text-white bg-blue-600 flex items-center justify-center gap-2 shadow-sm transition hover:-translate-y-1"><i class="fas fa-print"></i>Cetak</button>
+            <button onclick="showMenu('absenSiswa'); showAbsenTab('rekap');" class="w-full md:w-auto px-5 py-3 rounded-xl font-bold text-white bg-indigo-600 flex items-center justify-center gap-2 shadow-sm transition hover:-translate-y-1"><i class="fas fa-table"></i>Rekap Bulanan</button>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-4 mb-5">
+          <div class="rounded-2xl p-3 md:p-4 text-center glass-item border-b-4 border-green-500 shadow-sm"><div id="statHadir" class="font-orbitron font-bold text-2xl md:text-3xl text-green-500">0</div><div class="text-[10px] md:text-xs font-bold mt-1 opacity-70">HADIR</div></div>
+          <div class="rounded-2xl p-3 md:p-4 text-center glass-item border-b-4 border-yellow-500 shadow-sm"><div id="statSakit" class="font-orbitron font-bold text-2xl md:text-3xl text-yellow-500">0</div><div class="text-[10px] md:text-xs font-bold mt-1 opacity-70">SAKIT</div></div>
+          <div class="rounded-2xl p-3 md:p-4 text-center glass-item border-b-4 border-orange-500 shadow-sm"><div id="statIzin" class="font-orbitron font-bold text-2xl md:text-3xl text-orange-500">0</div><div class="text-[10px] md:text-xs font-bold mt-1 opacity-70">IZIN</div></div>
+          <div class="rounded-2xl p-3 md:p-4 text-center glass-item border-b-4 border-red-500 shadow-sm"><div id="statAlpa" class="font-orbitron font-bold text-2xl md:text-3xl text-red-500">0</div><div class="text-[10px] md:text-xs font-bold mt-1 opacity-70">ALPA</div></div>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 mb-5 items-center">
+          <div class="relative w-full sm:flex-1"><i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 opacity-50"></i><input type="text" id="searchAbsen" class="w-full pl-10 pr-4 py-3 rounded-xl glass-input text-sm font-medium" placeholder="Cari siswa..." oninput="renderAbsenHarianSiswa()"></div>
+          <div class="flex gap-2 w-full sm:w-auto">
+             <select id="filterAbjadAbsen" class="flex-1 sm:w-auto p-3 rounded-xl glass-input font-bold text-sm" onchange="renderAbsenHarianSiswa()"><option value="asc">A - Z</option><option value="desc">Z - A</option></select>
+             <select id="filterJkAbsen" class="flex-1 sm:w-auto p-3 rounded-xl glass-input font-bold text-sm" onchange="renderAbsenHarianSiswa()"><option value="">Semua</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select>
+          </div>
+        </div>
+        <div id="absenHarianGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 md:gap-4 pt-2"></div>
+      </div>
+
+      <!-- PROFILE GURU -->
+      <div id="profileGuru" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-user-circle text-purple-500 mr-2"></i>PROFILE GURU</h2>
+        <div class="glass-item rounded-3xl p-5 md:p-6 mb-6 md:mb-8 shadow-sm">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">Tahun Pelajaran</label><input type="text" id="tahunPelajaran" class="w-full p-3 rounded-xl glass-input font-bold" placeholder="Cth: 2025/2026"></div>
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">Semester Aktif</label><select id="semesterAktif" class="w-full p-3 rounded-xl glass-input font-bold"><option value="Ganjil">Semester Ganjil</option><option value="Genap">Semester Genap</option></select></div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">Nama Aplikasi</label><input type="text" id="namaAplikasi" class="w-full p-3 rounded-xl glass-input" placeholder="ADMINISTRASI DIGITAL GURU"></div>
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">Nama Sekolah</label><input type="text" id="namaSekolah" class="w-full p-3 rounded-xl glass-input" placeholder="Nama Sekolah"></div>
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">Nama Guru</label><input type="text" id="namaGuru" class="w-full p-3 rounded-xl glass-input" placeholder="Nama Lengkap"></div>
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">NIP</label><input type="text" id="nipGuru" class="w-full p-3 rounded-xl glass-input" placeholder="NIP"></div>
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">Jabatan</label><input type="text" id="jabatanGuru" class="w-full p-3 rounded-xl glass-input" placeholder="Jabatan"></div>
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">Email</label><input type="email" id="emailGuru" class="w-full p-3 rounded-xl glass-input" placeholder="email@sekolah.com"></div>
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">No. HP</label><input type="tel" id="hpGuru" class="w-full p-3 rounded-xl glass-input" placeholder="08xxxxxxxxxx"></div>
+            <div><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">Motto</label><input type="text" id="mottoGuru" class="w-full p-3 rounded-xl glass-input" placeholder="Motto hidup Anda"></div>
+            <div class="md:col-span-2"><label class="block text-xs md:text-sm font-semibold mb-1 opacity-80">Alamat</label><textarea id="alamatGuru" class="w-full p-3 rounded-xl glass-input" rows="2"></textarea></div>
+          </div>
+          <button onclick="simpanProfile()" class="mt-5 w-full md:w-auto px-8 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 bg-blue-600 text-white shadow-md hover:-translate-y-1 transition"><i class="fas fa-save"></i>Simpan Profile & Semester</button>
+        </div>
+        <div class="glass-item rounded-3xl p-5 md:p-6 shadow-sm">
+          <h3 class="font-orbitron font-bold text-lg mb-3 flex items-center gap-2"><i class="fas fa-chalkboard text-orange-500"></i>Manajemen Kelas</h3>
+          <div class="flex gap-2 mb-4">
+            <input type="text" id="namaKelasProfile" class="flex-1 p-3 rounded-xl glass-input font-bold text-sm" placeholder="Nama Kelas Baru">
+            <button onclick="tambahKelasProfile()" class="px-5 py-3 rounded-xl font-bold bg-green-600 text-white shadow-sm flex items-center justify-center gap-2"><i class="fas fa-plus"></i><span class="hidden sm:inline">Tambah</span></button>
+          </div>
+          <div id="manajemenKelasProfile" class="space-y-2 max-h-[300px] overflow-y-auto touch-pan pr-1"></div>
+        </div>
+      </div>
+
+      <!-- MATA PELAJARAN -->
+      <div id="mataPelajaran" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-book-open text-orange-500 mr-2"></i>MATA PELAJARAN</h2>
+        <div class="glass-item rounded-3xl p-5 md:p-6 mb-6 shadow-sm">
+          <label class="block text-sm font-semibold mb-2 opacity-80">Nama Mata Pelajaran Baru</label>
+          <div class="flex gap-2">
+            <input type="text" id="namaMapel" class="w-full p-3 rounded-xl glass-input font-bold text-sm" placeholder="Contoh: Matematika">
+            <button onclick="tambahMapel()" class="px-6 py-3 rounded-xl font-bold bg-blue-600 text-white shadow-sm flex items-center justify-center gap-2 whitespace-nowrap transition hover:-translate-y-1"><i class="fas fa-plus"></i><span class="hidden sm:inline">Tambah Mapel</span></button>
+          </div>
+        </div>
+        <div id="mapelList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4"></div>
+      </div>
+
+      <!-- DATA SISWA -->
+      <div id="dataSiswa" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-user-graduate text-blue-500 mr-2"></i>DATA SISWA</h2>
+        <div class="glass-item rounded-3xl p-5 md:p-6 mb-6 shadow-sm">
+          <h3 class="font-bold mb-4 border-b border-gray-500/20 pb-2 text-sm md:text-base flex items-center gap-2"><i class="fas fa-user-plus text-green-500"></i>Form Input Siswa</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 text-sm">
+            <div><label class="block font-semibold mb-1 opacity-80">Nama Lengkap *</label><input type="text" id="namaSiswa" class="w-full p-2.5 rounded-xl glass-input font-bold"></div>
+            <div><label class="block font-semibold mb-1 opacity-80">NISN (Opsional)</label><input type="text" id="nisSiswa" class="w-full p-2.5 rounded-xl glass-input font-bold"></div>
+            <div><label class="block font-semibold mb-1 opacity-80">Jenis Kelamin *</label><select id="jkSiswa" class="w-full p-2.5 rounded-xl glass-input font-bold"><option value="">Pilih</option><option value="L">Laki-laki</option><option value="P">Perempuan</option></select></div>
+            <div><label class="block font-semibold mb-1 opacity-80">Agama</label><select id="agamaSiswa" class="w-full p-2.5 rounded-xl glass-input font-bold"><option value="">Pilih</option><option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option><option value="Hindu">Hindu</option><option value="Buddha">Buddha</option><option value="Konghucu">Konghucu</option></select></div>
+            <div><label class="block font-semibold mb-1 opacity-80">Nama Ayah</label><input type="text" id="namaAyah" class="w-full p-2.5 rounded-xl glass-input font-bold"></div>
+            <div><label class="block font-semibold mb-1 opacity-80">Nama Ibu</label><input type="text" id="namaIbu" class="w-full p-2.5 rounded-xl glass-input font-bold"></div>
+            <div class="sm:col-span-2"><label class="block font-semibold mb-1 opacity-80">No HP Ortu</label><input type="tel" id="hpOrtu" class="w-full p-2.5 rounded-xl glass-input font-bold"></div>
+          </div>
+          <div class="flex flex-col sm:flex-row flex-wrap gap-2 mt-5 pt-4 border-t border-gray-500/20">
+            <button id="btnTambahSiswa" onclick="tambahSiswa()" class="w-full sm:w-auto px-5 py-3 rounded-xl font-bold bg-blue-600 text-white text-sm shadow-md flex items-center justify-center gap-2 transition hover:-translate-y-1"><i class="fas fa-save"></i>Simpan Data</button>
+            <button onclick="openImportModal()" class="w-full sm:w-auto px-5 py-3 rounded-xl font-bold glass-btn text-green-600 dark:text-green-400 text-sm flex items-center justify-center gap-2 transition hover:-translate-y-1 border-green-500/30"><i class="fas fa-file-import"></i>Import CSV</button>
+            <button onclick="downloadTemplateCSV()" class="w-full sm:w-auto px-5 py-3 rounded-xl font-bold glass-btn text-sm flex items-center justify-center gap-2 transition hover:-translate-y-1"><i class="fas fa-download"></i>Template</button>
+            <button onclick="exportDataSiswaCSV()" class="w-full sm:w-auto px-5 py-3 rounded-xl font-bold bg-green-600 text-white text-sm sm:ml-auto shadow-md flex items-center justify-center gap-2 transition hover:-translate-y-1"><i class="fas fa-file-excel"></i>Export Lengkap</button>
+          </div>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-2 mb-5 items-center">
+          <div class="relative w-full sm:flex-1"><i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 opacity-50"></i><input type="text" id="searchSiswa" class="w-full pl-10 pr-4 py-3 rounded-xl glass-input text-sm font-bold" placeholder="Cari nama siswa..." oninput="filterSiswa()"></div>
+          <select id="filterAbjad" class="p-3 w-full sm:w-auto rounded-xl glass-input font-bold text-sm" onchange="filterSiswa()"><option value="asc">A - Z</option><option value="desc">Z - A</option></select>
+          <button onclick="togglePilihSemuaSiswa()" class="p-3 w-full sm:w-auto rounded-xl glass-btn font-bold text-sm transition" id="btnPilihSemuaSiswa">Pilih Semua</button>
+          <button onclick="hapusSiswaTerpilih()" class="p-3 w-full sm:w-auto rounded-xl bg-red-600 text-white font-bold text-sm shadow-md hidden flex items-center justify-center gap-2 transition" id="btnHapusTerpilih"><i class="fas fa-trash"></i>Hapus Terpilih</button>
+        </div>
+        <div id="siswaList" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 md:gap-4"></div>
+      </div>
+
+      <!-- NILAI SISWA -->
+      <div id="nilaiSiswa" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-star text-yellow-500 mr-2"></i>NILAI <span id="nilaiKelasName" class="text-blue-500 hidden sm:inline"></span></h2>
+        <div class="glass-item rounded-3xl p-4 md:p-5 mb-5 border-l-4 border-blue-500 flex flex-col md:flex-row justify-between gap-4 md:items-center shadow-sm">
+           <div class="text-sm font-bold opacity-80 flex items-center gap-3"><i class="fas fa-users"></i> <span id="totalSiswaKelas">0</span> Siswa <span class="opacity-30">|</span> <i class="fas fa-book"></i> <span id="totalMapelKelas">0</span> Mapel</div>
+           <div class="flex flex-wrap gap-2">
+             <button onclick="document.getElementById('importNilaiCsvFile').click()" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs font-bold bg-yellow-600 text-white flex items-center justify-center gap-2 shadow-sm transition hover:scale-105"><i class="fas fa-upload"></i>Import</button>
+             <input type="file" id="importNilaiCsvFile" accept=".csv" class="hidden" onchange="importRekapNilaiPerMapel(event)">
+             <button onclick="downloadRekapNilaiPerMapel()" class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-600 text-white flex items-center justify-center gap-2 shadow-sm transition hover:scale-105"><i class="fas fa-file-excel"></i>Rekap Mapel</button>
+             <button onclick="downloadDaftarNilaiLengkapCSV()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-bold bg-green-600 text-white flex items-center justify-center gap-2 shadow-sm transition hover:scale-105"><i class="fas fa-list"></i>Semua Mapel</button>
+           </div>
+        </div>
+        <div class="glass-item rounded-3xl p-4 md:p-6 mb-5 shadow-sm">
+          <label class="block text-sm font-bold mb-2 opacity-80">Pilih Mata Pelajaran:</label>
+          <select id="selectedMapelNilai" class="w-full p-3.5 rounded-xl glass-input font-bold text-base cursor-pointer" onchange="changeSelectedMapelNilai()"></select>
+        </div>
+        <div id="kolomPenilaianSection" class="glass-item rounded-3xl p-4 md:p-6 mb-6 hidden shadow-sm">
+          <h3 class="font-bold text-sm md:text-base mb-3 flex items-center gap-2"><i class="fas fa-columns text-blue-500"></i>Kolom Penilaian <span id="currentMapelName" class="text-blue-500"></span></h3>
+          <div class="flex gap-2 mb-4">
+            <input type="text" id="namaKolomPenilaian" class="flex-1 p-3 rounded-xl glass-input text-sm font-bold" placeholder="Nama Kolom (Cth: UTS, UAS)">
+            <button onclick="tambahKolomPenilaian()" class="px-5 bg-blue-600 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-md transition hover:-translate-y-1"><i class="fas fa-plus"></i><span class="hidden sm:inline">Buat Kolom</span></button>
+          </div>
+          <div id="listKolomPenilaian" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div id="nilaiSiswaListContainer" class="space-y-3 md:space-y-4"></div>
+      </div>
+
+      <!-- REKAP ABSENSI -->
+      <div id="absenSiswa" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-clipboard-list text-indigo-500 mr-2"></i>REKAM JEJAK ABSENSI</h2>
+        <div class="flex gap-2 mb-5 overflow-x-auto scroll-smooth hide-scrollbar pb-1">
+          <button onclick="showAbsenTab('input')" class="absen-tab px-5 py-3 glass-btn rounded-xl font-bold text-sm whitespace-nowrap flex items-center gap-2 transition" data-tab="input"><i class="fas fa-edit"></i>Input Harian</button>
+          <button onclick="showAbsenTab('rekap')" class="absen-tab px-5 py-3 glass-btn rounded-xl font-bold text-sm whitespace-nowrap flex items-center gap-2 transition" data-tab="rekap"><i class="fas fa-table"></i>Rekap Bulanan</button>
+        </div>
+        <div id="inputAbsenContent" class="absen-tab-content">
+          <div class="glass-item rounded-3xl p-5 md:p-6 mb-5 shadow-sm">
+            <label class="block text-sm font-bold mb-2 opacity-80"><i class="fas fa-calendar-day text-blue-500 mr-2"></i>Pilih Tanggal</label>
+            <input type="date" id="tglAbsenSiswa" class="w-full sm:w-1/2 p-3.5 rounded-xl glass-input font-bold" onchange="renderAbsenSiswaList()">
+          </div>
+          <div id="absenSiswaList" class="space-y-2 md:space-y-3 mb-5"></div>
+          <button onclick="simpanAbsenSiswa()" class="w-full sm:w-auto px-8 py-4 bg-blue-600 text-white rounded-xl font-bold shadow-md flex items-center justify-center gap-2 transition hover:-translate-y-1"><i class="fas fa-check-circle"></i>Simpan Semua Absen</button>
+        </div>
+        <div id="rekapAbsenContent" class="absen-tab-content hidden">
+          <div class="glass-item rounded-3xl p-5 md:p-6 mb-5 flex flex-col md:flex-row gap-4 justify-between items-start md:items-end shadow-sm">
+            <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+              <div class="flex-1"><label class="block text-xs font-bold mb-1 opacity-80"><i class="fas fa-calendar text-purple-500 mr-1"></i>Dari Bulan</label><input type="month" id="bulanRekapAbsen" class="w-full p-3 rounded-xl glass-input font-bold" onchange="renderRekapAbsenBulanan()"></div>
+              <div class="hidden sm:flex items-end pb-3 font-bold opacity-50">-</div>
+              <div class="flex-1"><label class="block text-xs font-bold mb-1 opacity-80"><i class="fas fa-calendar text-purple-500 mr-1"></i>Sampai Bulan</label><input type="month" id="bulanRekapAbsenAkhir" class="w-full p-3 rounded-xl glass-input font-bold" onchange="renderRekapAbsenBulanan()"></div>
+            </div>
+            <div class="flex gap-2 w-full md:w-auto">
+              <button onclick="openCetakRekapAbsen()" class="flex-1 sm:flex-none px-5 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition hover:-translate-y-1"><i class="fas fa-print"></i>Cetak PDF</button>
+              <button onclick="downloadRekapAbsenBulanan()" class="flex-1 sm:flex-none px-5 py-3 bg-green-600 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition hover:-translate-y-1"><i class="fas fa-file-excel"></i>Excel</button>
+            </div>
+          </div>
+          <div class="glass-item rounded-3xl p-1 overflow-x-auto touch-pan w-full shadow-sm">
+            <table class="w-full text-xs md:text-sm text-left whitespace-nowrap">
+              <thead class="border-b border-gray-500/20"><tr><th class="p-4 text-center opacity-80">No</th><th class="p-4 opacity-80">Nama Siswa</th><th class="p-4 text-center opacity-80">L/P</th><th class="p-4 text-green-500 text-center font-bold">H</th><th class="p-4 text-yellow-500 text-center font-bold">S</th><th class="p-4 text-orange-500 text-center font-bold">I</th><th class="p-4 text-red-500 text-center font-bold">A</th><th class="p-4 text-center opacity-80">Detail</th></tr></thead>
+              <tbody id="rekapAbsenTableBody"><tr><td colspan="8" class="p-6 text-center opacity-50 font-bold">Pilih bulan.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CETAK HASIL -->
+      <div id="cetakHasil" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-print text-gray-500 mr-2"></i>CETAK HASIL BELAJAR</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6">
+          <div class="glass-item rounded-3xl p-5 md:p-6 shadow-sm">
+            <h3 class="font-bold text-sm md:text-base mb-4 border-b border-gray-500/20 pb-2 flex items-center gap-2"><i class="fas fa-trophy text-yellow-500"></i>Peringkat Siswa <span class="text-xs opacity-60 font-normal ml-1">(Rata-rata)</span></h3>
+            <div id="peringkatSiswaList" class="space-y-3 text-sm"></div>
+          </div>
+          <div class="glass-item rounded-3xl p-5 md:p-6 shadow-sm">
+            <h3 class="font-bold text-sm md:text-base mb-4 border-b border-gray-500/20 pb-2 flex items-center gap-2"><i class="fas fa-sliders-h text-blue-500"></i>Konfigurasi Laporan</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div class="sm:col-span-2"><label class="block font-bold mb-1 opacity-80">Jenis Laporan</label><select id="jenisCetak" class="w-full p-3 rounded-xl glass-input font-bold" onchange="toggleCetakOptions()"><option value="individu">Rapor Individu Siswa</option><option value="kolektif">Leger Kelas (Kolektif)</option></select></div>
+              <div id="siswaSelectContainer" class="sm:col-span-2"><label class="block font-bold mb-1 opacity-80">Pilih Siswa</label><select id="cetakSiswaSelect" class="w-full p-3 rounded-xl glass-input font-bold"></select></div>
+              <div><label class="block font-bold mb-1 opacity-80">Tempat Cetak</label><input type="text" id="tempatCetak" class="w-full p-3 rounded-xl glass-input font-bold" placeholder="Kota..."></div>
+              <div><label class="block font-bold mb-1 opacity-80">Tanggal Cetak</label><input type="date" id="tanggalCetak" class="w-full p-3 rounded-xl glass-input font-bold"></div>
+              <div><label class="block font-bold mb-1 opacity-80">Tanda Tangan Guru</label><select id="ttdCetak" class="w-full p-3 rounded-xl glass-input font-bold"><option value="ya">Ya</option><option value="tidak">Tidak</option></select></div>
+              <div><label class="block font-bold mb-1 opacity-80">Ukuran Kertas</label><select id="paperSize" class="w-full p-3 rounded-xl glass-input font-bold"><option value="A4">A4 Standar</option><option value="F4">F4 / Folio</option></select></div>
+            </div>
+            <div class="flex gap-3 mt-5 pt-4 border-t border-gray-500/20">
+              <button onclick="previewCetak()" class="flex-1 py-3 rounded-xl font-bold bg-blue-600 text-white text-sm shadow-md flex items-center justify-center gap-2 transition hover:-translate-y-1"><i class="fas fa-eye"></i>Pratinjau</button>
+              <button onclick="printCetak('previewContent')" class="flex-1 py-3 rounded-xl font-bold bg-gray-800 dark:bg-gray-200 text-white dark:text-black text-sm shadow-md flex items-center justify-center gap-2 transition hover:-translate-y-1"><i class="fas fa-print"></i>Cetak Dokumen</button>
+            </div>
+          </div>
+        </div>
+        <div id="previewCetak" class="hidden w-full overflow-x-auto touch-pan"><div id="previewContent" class="p-6 sm:p-10 bg-white text-black min-h-[500px] shadow-2xl border border-gray-300 rounded-2xl text-xs sm:text-sm mx-auto" style="min-width: 650px;"></div></div>
+      </div>
+
+      <!-- RPP / MODUL AJAR (PUSTAKA) -->
+      <div id="rppModul" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-folder-open text-yellow-500 mr-2"></i>PUSTAKA TAUTAN &amp; MODUL</h2>
+        
+        <div class="glass-item rounded-3xl p-5 md:p-6 mb-6 shadow-sm border-t-4 border-blue-500">
+          <h3 class="font-bold mb-4 text-sm md:text-base border-b border-gray-500/20 pb-2"><i class="fas fa-cloud-upload-alt text-blue-500 mr-2"></i>Simpan Pustaka Modul</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 text-sm">
+            <div><label class="block font-bold mb-1 opacity-80">Judul Berkas</label><input type="text" id="judulRpp" class="w-full p-3 rounded-xl glass-input font-bold" placeholder="Cth: Modul Aljabar Bab 1"></div>
+            <div><label class="block font-bold mb-1 opacity-80">Link Tautan Drive/Web</label><input type="url" id="linkRpp" class="w-full p-3 rounded-xl glass-input font-bold" placeholder="https://..."></div>
+          </div>
+          <button onclick="tambahRpp()" class="w-full sm:w-auto px-6 py-3 rounded-xl font-bold bg-blue-600 text-white text-sm shadow-md transition hover:-translate-y-1 flex items-center justify-center gap-2"><i class="fas fa-save"></i>Simpan ke Pustaka</button>
+        </div>
+        <div id="rppList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4"></div>
+      </div>
+
+      <!-- Jurnal & Jadwal -->
+      <div id="jurnalGuru" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-calendar-alt text-pink-500 mr-2"></i>JURNAL & JADWAL</h2>
+        <div class="flex gap-2 mb-5 overflow-x-auto scroll-smooth hide-scrollbar pb-1">
+          <button onclick="showJurnalTab('jurnal')" class="jurnal-tab px-5 py-2.5 glass-btn rounded-xl font-bold text-sm whitespace-nowrap active flex items-center gap-2 transition" data-tab="jurnal"><i class="fas fa-edit"></i>Catatan Jurnal Harian</button>
+          <button onclick="showJurnalTab('jadwal')" class="jurnal-tab px-5 py-2.5 glass-btn rounded-xl font-bold text-sm whitespace-nowrap flex items-center gap-2 transition" data-tab="jadwal"><i class="fas fa-calendar-week"></i>Jadwal Mengajar</button>
+        </div>
+        
+        <div id="jurnalHarianContent" class="jurnal-tab-content">
+          <div class="glass-item rounded-3xl p-5 md:p-6 mb-6 shadow-sm border-l-4 border-pink-500">
+            <h3 class="font-bold mb-4 text-sm border-b border-gray-500/20 pb-2 flex items-center gap-2"><i class="fas fa-pen text-pink-500"></i> Posting Jurnal</h3>
+            <div class="flex flex-col sm:flex-row gap-3 text-sm mb-4">
+              <input type="date" id="tglJurnal" class="w-full sm:w-40 p-3 rounded-xl glass-input font-bold">
+              <input type="text" id="materiJurnal" class="w-full flex-1 p-3 rounded-xl glass-input font-bold" placeholder="Materi / Kegiatan hari ini">
+              <button id="btnSimpanJurnal" onclick="tambahJurnal()" class="w-full sm:w-auto px-6 py-3 rounded-xl font-bold bg-pink-600 text-white flex items-center justify-center gap-2 shadow-md transition hover:-translate-y-1"><i class="fas fa-paper-plane"></i> <span class="hidden sm:inline">Simpan</span></button>
+            </div>
+          </div>
+          <div class="glass-item rounded-3xl p-5 md:p-6 mb-6 flex flex-col md:flex-row gap-4 items-center justify-between shadow-sm">
+            <span class="font-bold opacity-80 text-sm flex items-center gap-2"><i class="fas fa-print text-blue-500"></i>Cetak Dokumen Jurnal: </span>
+            <div class="flex flex-wrap gap-3 w-full md:w-auto">
+              <div class="flex gap-2 w-full sm:w-auto items-center"><input type="date" id="tglJurnalCetak" class="flex-1 p-2.5 glass-input rounded-xl text-sm font-bold"><button onclick="previewJurnal('harian')" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-md hover:scale-105 transition flex items-center gap-2"><i class="fas fa-print"></i><span class="hidden sm:inline">Harian</span></button></div>
+              <div class="flex gap-2 w-full sm:w-auto items-center"><input type="month" id="blnJurnalCetak" class="flex-1 p-2.5 glass-input rounded-xl text-sm font-bold"><button onclick="previewJurnal('bulanan')" class="px-5 py-2.5 bg-green-600 text-white rounded-xl text-sm font-bold shadow-md hover:scale-105 transition flex items-center gap-2"><i class="fas fa-print"></i><span class="hidden sm:inline">Bulanan</span></button></div>
+            </div>
+          </div>
+          <div id="jurnalList" class="space-y-3"></div>
+        </div>
+
+        <div id="jadwalPelajaranContent" class="jurnal-tab-content hidden">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 md:gap-6 mb-6">
+            <div class="glass-item rounded-3xl p-5 md:p-6 shadow-sm border-l-4 border-blue-500">
+              <h3 class="font-bold mb-4 text-sm md:text-base flex items-center gap-2"><i class="fas fa-clock text-blue-500"></i>Pengaturan Durasi 1 JP</h3>
+              <div class="flex gap-3 mb-5">
+                <input type="number" id="durasiJamPelajaran" class="w-24 p-3 glass-input rounded-xl font-bold text-center" value="45">
+                <span class="py-3 font-semibold opacity-80 text-sm">Menit</span>
+                <button onclick="simpanDurasiJP()" class="flex-1 bg-green-600 text-white rounded-xl font-bold shadow-md transition hover:-translate-y-1 text-sm flex items-center justify-center gap-2"><i class="fas fa-save"></i>Simpan</button>
+              </div>
+              <div class="text-center p-4 glass-input rounded-2xl border-b-4 border-green-500 bg-green-500/10"><div class="text-[10px] opacity-70 uppercase font-bold tracking-widest mb-1">Total Jam Minggu Ini</div><div id="totalJamMinggu" class="font-orbitron font-bold text-3xl text-green-500 drop-shadow-sm">0 JP</div></div>
+            </div>
+            <div class="glass-item rounded-3xl p-5 md:p-6 lg:col-span-2 shadow-sm border-l-4 border-orange-500">
+              <h3 class="font-bold mb-4 text-sm md:text-base flex items-center gap-2"><i class="fas fa-plus-circle text-orange-500"></i>Tambah Jadwal Baru</h3>
+              <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 text-xs md:text-sm font-medium">
+                <select id="jenisJadwal" class="p-3 glass-input rounded-xl col-span-2 sm:col-span-3 md:col-span-2" onchange="toggleJadwalFields()"><option value="pelajaran">📚 Pelajaran</option><option value="istirahat">☕ Istirahat</option><option value="upacara">🇮🇩 Upacara</option><option value="ekskul">⚽ Ekskul</option></select>
+                <select id="jadwalMapelSelect" class="p-3 glass-input rounded-xl col-span-2 sm:col-span-3 md:col-span-2" onchange="toggleManualMapel()"></select>
+                <input type="text" id="namaMapelManual" class="p-3 glass-input rounded-xl col-span-2 sm:col-span-3 md:col-span-2 hidden" placeholder="Mapel Manual">
+                <input type="text" id="namaGuruJadwal" class="p-3 glass-input rounded-xl col-span-2 md:col-span-1" placeholder="Guru / Pengampu">
+                <input type="number" id="jumlahJP" class="p-3 glass-input rounded-xl font-bold text-center" placeholder="Jml JP" step="0.5" oninput="hitungWaktuSelesai()">
+                <select id="hariJadwal" class="p-3 glass-input rounded-xl font-bold"><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option></select>
+                <input type="time" id="waktuMulaiJadwal" class="p-3 glass-input rounded-xl font-bold" value="07:00" oninput="hitungWaktuSelesai()">
+                <input type="time" id="waktuSelesaiJadwal" class="p-3 glass-input rounded-xl opacity-70" readonly>
+                <input type="text" id="keteranganJadwal" class="p-3 glass-input rounded-xl col-span-2 sm:col-span-3 md:col-span-2" placeholder="Ket/Ruangan (Opsional)">
+                <button onclick="tambahJadwal()" class="col-span-2 sm:col-span-1 bg-blue-600 text-white rounded-xl font-bold shadow-md transition hover:-translate-y-1 flex items-center justify-center gap-2"><i class="fas fa-plus"></i> Tambah</button>
+                <button onclick="resetFormJadwal()" class="col-span-2 sm:col-span-1 glass-btn rounded-xl font-bold transition hover:bg-white/20 flex items-center justify-center gap-2"><i class="fas fa-undo"></i> Reset</button>
+              </div>
+            </div>
+          </div>
+          <div class="glass-item rounded-3xl p-3 md:p-5 overflow-x-auto touch-pan w-full shadow-sm">
+            <div class="flex justify-between items-center mb-4 px-2">
+              <h3 class="font-bold text-sm md:text-base flex items-center gap-2"><i class="fas fa-table text-blue-500"></i>Tabel Jadwal Mengajar</h3>
+              <select id="filterHariJadwal" class="p-2.5 glass-input rounded-xl text-xs md:text-sm font-bold shadow-sm" onchange="renderJadwalTable()"><option value="">📅 Semua Hari</option><option value="Senin">Senin</option><option value="Selasa">Selasa</option><option value="Rabu">Rabu</option><option value="Kamis">Kamis</option><option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option></select>
+            </div>
+            <table class="w-full text-xs md:text-sm text-left whitespace-nowrap min-w-[600px]">
+              <thead class="border-b border-gray-500/30"><tr><th class="p-4 opacity-80 font-bold">Waktu</th><th class="p-4 opacity-80 font-bold">Hari</th><th class="p-4 opacity-80 font-bold">Mata Pelajaran</th><th class="p-4 opacity-80 font-bold">Guru</th><th class="p-4 opacity-80 text-center font-bold">JP</th><th class="p-4 opacity-80 text-center font-bold">Aksi</th></tr></thead>
+              <tbody id="jadwalTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pengaturan -->
+      <div id="manajemen" class="menu-content hidden">
+        <h2 class="font-orbitron font-bold text-xl md:text-2xl mb-4 md:mb-6"><i class="fas fa-sliders-h text-gray-500 mr-2"></i>PENGATURAN SISTEM</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          <div class="glass-item rounded-3xl p-5 md:p-6 shadow-sm border-l-4 border-blue-500">
+            <h3 class="font-bold mb-4 text-sm md:text-base border-b border-gray-500/20 pb-3 flex items-center gap-2"><i class="fas fa-desktop text-blue-500"></i>Tampilan & Layout</h3>
+            <label class="text-xs font-bold opacity-80 block mb-2">Ukuran Font Keseluruhan (<span id="fontSizeValue">14px</span>)</label>
+            <input type="range" id="fontSizeSlider" min="8" max="20" value="14" class="w-full accent-blue-500 mb-5" oninput="changeFontSize(this.value)">
+            <label class="text-xs font-bold opacity-80 block mb-2">Gaya Navigasi (Otomatis)</label>
+            <select id="menuLayoutSelect" class="w-full p-3.5 rounded-xl glass-input font-bold text-sm mb-5 shadow-sm" onchange="changeMenuLayout(this.value)"><option value="horizontal">Horizontal (Di Atas - Default)</option><option value="sidebar">Sidebar (Samping - PC)</option></select>
+            <label class="text-xs font-bold opacity-80 block mb-2">Efek Kaca (Blur & Transparansi)</label>
+            <div class="flex gap-3 mb-4"><input type="range" id="appOpacitySlider" min="10" max="100" value="55" class="w-full accent-purple-500" oninput="changeAppOpacity(this.value)"><input type="range" id="appBlurSlider" min="0" max="50" value="24" class="w-full accent-purple-500" oninput="changeAppBlur(this.value)"></div>
+            <button onclick="resetAppTransparency()" class="w-full py-3 glass-btn text-red-500 text-sm font-bold rounded-xl border-red-500/30 transition hover:bg-red-500 hover:text-white flex items-center justify-center gap-2"><i class="fas fa-undo"></i>Reset Efek Kaca</button>
+          </div>
+          
+          <div class="glass-item rounded-3xl p-5 md:p-6 border-l-4 border-pink-500 shadow-sm">
+            <h3 class="font-bold mb-4 text-sm md:text-base border-b border-gray-500/20 pb-3 flex items-center gap-2"><i class="fas fa-image text-pink-500"></i>Latar Belakang Kustom</h3>
+            <label class="block text-xs font-bold opacity-80 mb-2">Foto Background (Maks 10MB)</label>
+            <input type="file" id="bgInput" accept="image/*" class="w-full p-3 rounded-xl glass-input mb-4 text-xs font-medium" onchange="handleBgUpload(event)">
+            <div class="grid grid-cols-2 gap-4 mb-5">
+               <div><label class="block text-xs font-bold opacity-80 mb-2">Gaya Foto</label><select id="bgSizeSelect" class="w-full p-3 rounded-xl glass-input text-xs font-bold" onchange="changeBgSize(this.value)"><option value="cover">Penuhi Layar</option><option value="contain">Fit Tengah</option><option value="100% 100%">Rentangkan</option></select></div>
+               <div><label class="block text-xs font-bold opacity-80 mb-2">Transparansi</label><input type="range" id="bgOpacitySlider" min="10" max="100" value="100" class="w-full accent-pink-500 mt-1" oninput="changeBgOpacity(this.value)"></div>
+            </div>
+            <button onclick="resetBackground()" class="w-full py-3 glass-btn text-red-500 text-sm font-bold rounded-xl border-red-500/30 transition hover:bg-red-500 hover:text-white flex items-center justify-center gap-2"><i class="fas fa-trash"></i>Hapus Foto Latar</button>
+          </div>
+
+          <div class="glass-item rounded-3xl p-5 md:p-6 md:col-span-2 border-l-4 border-orange-500 flex flex-col md:flex-row gap-5 justify-between items-center shadow-sm">
+            <div class="flex-1"><h3 class="font-bold text-sm md:text-base mb-2 flex items-center gap-2"><i class="fas fa-sync-alt text-orange-500"></i>Migrasi Semester Otomatis</h3><p class="text-xs opacity-80 leading-relaxed">Salin kerangka kelas, siswa & mapel ke semester genap secara otomatis tanpa ribet input ulang. (Peringatan: Data isian nilai & absen akan dikosongkan pada semester yang baru).</p></div>
+            <button onclick="syncSemesterData()" class="w-full md:w-auto px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl shadow-lg transition hover:-translate-y-1 whitespace-nowrap flex items-center justify-center gap-2"><i class="fas fa-copy"></i>Duplikat ke Genap</button>
+          </div>
+
+          <div class="glass-item rounded-3xl p-5 md:p-6 md:col-span-2 shadow-sm border-l-4 border-green-500">
+            <h3 class="font-bold mb-5 text-sm md:text-base border-b border-gray-500/20 pb-3 flex items-center gap-2"><i class="fas fa-shield-alt text-green-500"></i>Keamanan & Database Lokal</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+              <button onclick="openBackupModal()" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition hover:-translate-y-1 flex items-center justify-center gap-2"><i class="fas fa-download"></i>Backup JSON</button>
+              <label class="w-full py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-md transition hover:-translate-y-1 cursor-pointer text-center flex items-center justify-center gap-2"><i class="fas fa-upload"></i>Restore JSON <input type="file" id="importFile" accept=".json" class="hidden" onchange="importData(event)"></label>
+              <button onclick="confirmResetData()" class="w-full py-4 glass-btn text-red-500 font-bold rounded-xl border-red-500/30 transition hover:bg-red-500 hover:text-white flex items-center justify-center gap-2"><i class="fas fa-trash-alt"></i>Reset Pabrik</button>
+            </div>
+            
+            <div class="border-t border-gray-500/20 pt-6">
+              <h4 class="font-orbitron font-bold text-xs opacity-80 mb-4 uppercase tracking-wider flex items-center gap-2"><i class="fas fa-hdd text-green-500"></i>Kapasitas Memori Perangkat (Maks 2 GB)</h4>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div class="p-4 glass-input rounded-2xl text-center shadow-inner"><div id="storageUsed" class="font-bold text-blue-500 text-lg">0 KB</div><div class="text-[10px] opacity-70 uppercase font-semibold mt-1 tracking-wider">Terpakai</div></div>
+                <div class="p-4 glass-input rounded-2xl text-center shadow-inner"><div id="photoCount" class="font-bold text-green-500 text-lg">0</div><div class="text-[10px] opacity-70 uppercase font-semibold mt-1 tracking-wider">Jml Foto</div></div>
+                <div class="p-4 glass-input rounded-2xl text-center shadow-inner"><div id="photoStorageSize" class="font-bold text-yellow-500 text-lg">0 MB</div><div class="text-[10px] opacity-70 uppercase font-semibold mt-1 tracking-wider">Size Foto</div></div>
+                <div class="p-4 glass-input rounded-2xl text-center shadow-inner"><div id="remainingCapacity" class="font-bold text-purple-500 text-lg">2000 MB</div><div class="text-[10px] opacity-70 uppercase font-semibold mt-1 tracking-wider">Sisa Ruang</div></div>
+              </div>
+              <div class="h-4 rounded-full overflow-hidden glass-input p-0.5 mb-4"><div id="storageBar" class="h-full rounded-full transition-all duration-700 bg-blue-500 shadow-sm" style="width: 0%;"></div></div>
+              <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+                 <button onclick="cleanupOrphanedPhotos()" class="w-full sm:w-auto px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl text-xs sm:text-sm shadow-md transition hover:-translate-y-1 flex items-center justify-center gap-2"><i class="fas fa-magic"></i>Optimasi & Bersihkan Cache Foto</button>
+                 <span class="text-[10px] sm:text-xs font-bold opacity-80 bg-white/10 px-4 py-2.5 rounded-xl border border-white/20 shadow-inner flex items-center gap-2"><i class="fas fa-shield-check text-green-500"></i>Auto-Save 60 Detik Aktif</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ALL MODALS -->
+<!-- Class Select -->
+<div id="classSelectorModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-sm w-full modal-content shadow-2xl"><div class="flex justify-between items-center mb-5 border-b border-gray-500/20 pb-3"><h3 class="font-bold text-xl flex items-center gap-2"><i class="fas fa-th-large text-blue-500"></i>Ruang Kerja</h3><button onclick="D('classSelectorModal').classList.remove('active')" class="w-8 h-8 rounded-full glass-btn text-red-500 transition hover:bg-red-500 hover:text-white flex items-center justify-center"><i class="fas fa-times"></i></button></div><div id="classListModal" class="space-y-2 mb-5 max-h-[50vh] overflow-y-auto touch-pan pr-2"></div><button onclick="D('classSelectorModal').classList.remove('active');D('classModal').classList.add('active');" class="w-full py-3.5 glass-btn font-bold text-blue-600 rounded-xl text-sm border-blue-500/30 hover:bg-blue-500 hover:text-white transition flex items-center justify-center gap-2"><i class="fas fa-plus"></i>Buka Kelas Baru</button></div></div>
+<!-- Add Class -->
+<div id="classModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-sm w-full modal-content shadow-2xl"><h3 class="font-bold text-xl mb-5 flex items-center gap-2"><i class="fas fa-chalkboard text-green-500"></i>Kelas Baru</h3><input type="text" id="modalNamaKelas" class="w-full p-4 glass-input rounded-xl mb-5 font-bold text-sm" placeholder="Contoh: XII IPA 1"><div class="flex justify-end gap-3"><button onclick="D('classModal').classList.remove('active')" class="px-5 py-2.5 glass-btn rounded-xl text-sm font-bold transition hover:bg-white/20">Batal</button><button onclick="simpanKelasBaru()" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-save"></i>Buat Kelas</button></div></div></div>
+<!-- Edit Class -->
+<div id="editClassModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-sm w-full modal-content shadow-2xl"><h3 class="font-bold text-xl mb-5 flex items-center gap-2"><i class="fas fa-edit text-blue-500"></i>Ubah Nama Kelas</h3><input type="text" id="editKelasInput" class="w-full p-4 glass-input rounded-xl mb-5 font-bold text-sm" placeholder="Nama kelas..."><div class="flex justify-end gap-3"><button onclick="D('editClassModal').classList.remove('active')" class="px-5 py-2.5 glass-btn rounded-xl text-sm font-bold transition hover:bg-white/20">Batal</button><button onclick="simpanEditKelas()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-save"></i>Simpan</button></div></div></div>
+<!-- Confirm -->
+<div id="confirmModal" class="modal"><div class="glass-panel rounded-3xl p-8 max-w-xs sm:max-w-sm w-full modal-content text-center shadow-2xl"><div class="w-20 h-20 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center text-4xl mx-auto mb-5 animate-pulse"><i class="fas fa-exclamation-triangle"></i></div><h3 id="confirmTitle" class="font-bold text-xl mb-3">Konfirmasi</h3><div id="confirmMessage" class="opacity-80 mb-6 text-sm leading-relaxed">Apakah Anda yakin?</div><div class="flex justify-center gap-3"><button onclick="closeConfirmModal()" class="flex-1 py-3 glass-btn rounded-xl text-sm font-bold transition hover:bg-white/20">Batal</button><button id="confirmBtn" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-bold shadow-md">Ya, Lanjut</button></div></div></div>
+<!-- Photos -->
+<div id="photoModal" class="modal"><div class="glass-panel rounded-3xl p-8 max-w-xs sm:max-w-sm w-full modal-content text-center shadow-2xl"><h3 class="font-bold text-xl mb-6">Ubah Foto Profil</h3><div id="photoPreview" class="w-36 h-36 rounded-full mx-auto border-4 border-white/50 mb-6 overflow-hidden shadow-lg bg-gray-500/20 flex items-center justify-center text-5xl opacity-50"><i class="fas fa-image"></i></div><label class="block w-full py-3.5 glass-btn text-blue-600 font-bold rounded-xl mb-4 cursor-pointer text-sm transition hover:bg-blue-500 hover:text-white flex items-center justify-center gap-2"><i class="fas fa-folder-open"></i>Pilih Foto Galeri<input type="file" id="photoInput" accept="image/*" class="hidden" onchange="previewPhoto(event)"></label><div class="flex gap-3"><button onclick="D('photoModal').classList.remove('active')" class="flex-1 py-3 glass-btn rounded-xl text-sm font-bold transition hover:bg-white/20">Batal</button><button onclick="simpanPhoto()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md flex items-center justify-center gap-2"><i class="fas fa-save"></i>Simpan</button></div></div></div>
+<div id="siswaPhotoModal" class="modal"><div class="glass-panel rounded-3xl p-8 max-w-xs sm:max-w-sm w-full modal-content text-center shadow-2xl"><h3 class="font-bold text-xl mb-6">Foto Siswa</h3><div id="siswaPhotoPreview" class="w-36 h-36 rounded-full mx-auto border-4 border-white/50 mb-6 overflow-hidden shadow-lg bg-gray-500/20 flex items-center justify-center text-5xl opacity-50"><i class="fas fa-image"></i></div><label class="block w-full py-3.5 glass-btn text-blue-600 font-bold rounded-xl mb-4 cursor-pointer text-sm transition hover:bg-blue-500 hover:text-white flex items-center justify-center gap-2"><i class="fas fa-folder-open"></i>Pilih Foto Siswa<input type="file" id="siswaPhotoInput" accept="image/*" class="hidden" onchange="previewSiswaPhoto(event)"></label><div class="flex gap-3"><button onclick="D('siswaPhotoModal').classList.remove('active')" class="flex-1 py-3 glass-btn rounded-xl text-sm font-bold transition hover:bg-white/20">Batal</button><button onclick="simpanSiswaPhoto()" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md flex items-center justify-center gap-2"><i class="fas fa-save"></i>Simpan</button></div></div></div>
+<!-- Import -->
+<div id="importModal" class="modal"><div class="glass-panel rounded-3xl p-8 max-w-xs sm:max-w-md w-full modal-content shadow-2xl"><h3 class="font-bold text-xl mb-4 flex items-center gap-2"><i class="fas fa-file-import text-green-500"></i>Import Siswa</h3><div class="bg-green-500/10 border border-green-500/30 p-4 rounded-2xl mb-5"><p class="text-xs opacity-90 mb-3 font-medium">Sistem membaca file CSV dengan Header Baris Pertama berikut:</p><strong class="font-mono text-xs block text-center bg-white/20 p-2.5 rounded-xl text-green-700 dark:text-green-400">NO | NAMA SISWA | JENIS KELAMIN | NISN</strong><p class="text-[10px] opacity-70 mt-3 italic">*Kolom NISN bersifat opsional. Boleh dikosongkan.</p></div><input type="file" id="csvFile" accept=".csv" class="w-full p-3 glass-input rounded-xl mb-6 text-sm"><div class="flex justify-end gap-3"><button onclick="D('importModal').classList.remove('active')" class="px-5 py-2.5 glass-btn rounded-xl text-sm font-bold transition hover:bg-white/20">Batal</button><button onclick="processImportCSV()" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-upload"></i>Proses Import</button></div></div></div>
+<!-- Edit Kolom -->
+<div id="editKolomModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-sm w-full modal-content shadow-2xl"><h3 class="font-bold text-xl mb-5 flex items-center gap-2"><i class="fas fa-edit text-blue-500"></i>Ganti Nama Kolom</h3><input type="text" id="editKolomInput" class="w-full p-4 glass-input rounded-xl mb-5 font-bold text-sm"><div class="flex justify-end gap-3"><button onclick="D('editKolomModal').classList.remove('active')" class="px-5 py-2.5 glass-btn rounded-xl text-sm font-bold transition hover:bg-white/20">Batal</button><button onclick="simpanEditKolom()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-save"></i>Simpan</button></div></div></div>
+<!-- Backup/Restore -->
+<div id="backupModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-sm w-full modal-content shadow-2xl"><div class="flex justify-between items-center mb-5 border-b border-gray-500/20 pb-3"><h3 class="font-bold text-xl flex items-center gap-2"><i class="fas fa-cloud-download-alt text-blue-500"></i>Backup Data</h3><button onclick="D('backupModal').classList.remove('active')" class="w-8 h-8 rounded-full glass-btn text-red-500 transition hover:bg-red-500 hover:text-white flex items-center justify-center"><i class="fas fa-times"></i></button></div><label class="block text-sm font-semibold opacity-80 mb-2">Pilih Data:</label><select id="backupTypeSelect" class="w-full p-4 glass-input rounded-xl mb-6 font-bold text-sm shadow-inner"><option value="full">Seluruh Data (Ganjil & Genap)</option><option value="Ganjil">Semester Ganjil Saja</option><option value="Genap">Semester Genap Saja</option></select><div class="flex justify-end gap-3"><button onclick="D('backupModal').classList.remove('active')" class="px-5 py-2.5 glass-btn rounded-xl text-sm font-bold transition hover:bg-white/20">Batal</button><button onclick="executeExport()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-download"></i>Unduh File</button></div></div></div>
+<div id="restoreModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-sm w-full modal-content shadow-2xl"><div class="flex justify-between items-center mb-4 border-b border-gray-500/20 pb-3"><h3 class="font-bold text-xl flex items-center gap-2"><i class="fas fa-cloud-upload-alt text-green-500"></i>Restore Data</h3><button onclick="D('restoreModal').classList.remove('active')" class="w-8 h-8 rounded-full glass-btn text-red-500 transition hover:bg-red-500 hover:text-white flex items-center justify-center"><i class="fas fa-times"></i></button></div><div id="restoreInfoText" class="text-xs bg-green-500/20 border border-green-500/30 text-green-700 dark:text-green-400 p-3 rounded-xl mb-4 font-medium shadow-inner">Menganalisis...</div><label class="block text-sm font-semibold opacity-80 mb-2">Mode Pemulihan:</label><select id="restoreTypeSelect" class="w-full p-4 glass-input rounded-xl mb-6 font-bold text-sm shadow-inner"></select><div class="flex justify-end gap-3"><button onclick="D('restoreModal').classList.remove('active')" class="px-5 py-2.5 glass-btn rounded-xl text-sm font-bold transition hover:bg-white/20">Batal</button><button onclick="executeRestore()" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-bold shadow-md flex items-center gap-2"><i class="fas fa-upload"></i>Pulihkan</button></div></div></div>
+<!-- Details -->
+<div id="detailAbsenModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-sm w-full modal-content flex flex-col max-h-[85vh] shadow-2xl"><h3 id="detailAbsenTitle" class="font-bold text-xl mb-4 border-b border-gray-500/20 pb-3"></h3><div id="detailAbsenContent" class="space-y-2 flex-1 pr-1 pb-4 overflow-y-auto touch-pan"></div><button onclick="D('detailAbsenModal').classList.remove('active')" class="w-full py-3 glass-btn rounded-xl font-bold text-sm mt-2 transition hover:bg-white/20 flex items-center justify-center gap-2"><i class="fas fa-times-circle"></i>Tutup Jendela</button></div></div>
+<div id="dashboardAbsenModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-md w-full modal-content flex flex-col max-h-[85vh] shadow-2xl"><div class="flex justify-between items-center mb-4 border-b border-gray-500/20 pb-3"><h3 id="dashboardAbsenTitle" class="font-bold text-lg md:text-xl uppercase"></h3><button onclick="D('dashboardAbsenModal').classList.remove('active')" class="w-8 h-8 rounded-full glass-btn text-red-500 flex items-center justify-center transition hover:bg-red-500 hover:text-white"><i class="fas fa-times"></i></button></div><div id="dashboardAbsenContent" class="space-y-2 overflow-y-auto touch-pan flex-1 pr-1 pb-2"></div></div></div>
+<!-- Cetak Absen -->
+<div id="cetakAbsenHarianModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-md md:max-w-lg w-full modal-content max-h-[90vh] overflow-y-auto touch-pan shadow-2xl"><div class="flex justify-between items-center mb-5 border-b border-gray-500/20 pb-3"><h3 class="font-bold text-xl flex items-center gap-2"><i class="fas fa-print text-blue-500"></i>Cetak Harian</h3><button onclick="D('cetakAbsenHarianModal').classList.remove('active')" class="w-8 h-8 rounded-full glass-btn text-red-500 transition hover:bg-red-500 hover:text-white flex items-center justify-center"><i class="fas fa-times"></i></button></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 text-sm"><div class="sm:col-span-2"><label class="block font-bold opacity-80 mb-1">Tanggal</label><input type="date" id="harianTanggalAbsen" class="w-full p-3 glass-input rounded-xl font-bold shadow-inner"></div><div><label class="block font-bold opacity-80 mb-1">Tempat Cetak</label><input type="text" id="harianTempatCetak" class="w-full p-3 glass-input rounded-xl shadow-inner" placeholder="Kota..."></div><div><label class="block font-bold opacity-80 mb-1">Tgl Cetak</label><input type="date" id="harianTanggalCetak" class="w-full p-3 glass-input rounded-xl font-bold shadow-inner"></div><div class="sm:col-span-2"><label class="block font-bold opacity-80 mb-1">Tanda Tangan</label><select id="harianTtdCetak" class="w-full p-3 glass-input rounded-xl shadow-inner"><option value="ya">Pakai TTD Guru</option><option value="tidak">Tanpa TTD</option></select></div></div><div class="flex justify-end gap-3 border-t border-gray-500/20 pt-4"><button onclick="D('cetakAbsenHarianModal').classList.remove('active')" class="px-5 py-2.5 glass-btn rounded-xl font-bold text-sm transition hover:bg-white/20">Batal</button><button onclick="previewAbsenHarian()" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-md flex items-center gap-2"><i class="fas fa-eye"></i>Preview</button></div><div id="previewAbsenHarian" class="hidden mt-6"><div id="previewAbsenHarianContent" class="bg-white text-black p-4 md:p-6 text-xs rounded-xl border border-gray-300 overflow-x-auto shadow-inner"></div><button onclick="printCetak('previewAbsenHarianContent')" class="w-full mt-4 py-3.5 bg-gray-800 text-white rounded-xl font-bold shadow-md flex items-center justify-center gap-2 transition hover:bg-gray-900"><i class="fas fa-print"></i>Cetak Sekarang</button></div></div></div>
+<div id="cetakRekapAbsenModal" class="modal"><div class="glass-panel rounded-3xl p-6 max-w-xs sm:max-w-md md:max-w-lg w-full modal-content max-h-[90vh] overflow-y-auto touch-pan shadow-2xl"><div class="flex justify-between items-center mb-5 border-b border-gray-500/20 pb-3"><h3 class="font-bold text-xl flex items-center gap-2"><i class="fas fa-file-alt text-green-500"></i>Cetak Rekap Bulanan</h3><button onclick="D('cetakRekapAbsenModal').classList.remove('active')" class="w-8 h-8 rounded-full glass-btn text-red-500 transition hover:bg-red-500 hover:text-white flex items-center justify-center"><i class="fas fa-times"></i></button></div><div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5 text-sm"><div class="sm:col-span-2"><label class="block font-bold opacity-80 mb-1">Bulan</label><div class="flex gap-2 items-center"><input type="month" id="rekapTanggalAbsenModal" class="w-full p-3 glass-input rounded-xl font-bold shadow-inner"><span class="font-bold opacity-50">-</span><input type="month" id="rekapTanggalAbsenModalAkhir" class="w-full p-3 glass-input rounded-xl font-bold shadow-inner"></div></div><div><label class="block font-bold opacity-80 mb-1">Tempat Cetak</label><input type="text" id="rekapTempatCetakModal" class="w-full p-3 glass-input rounded-xl shadow-inner" placeholder="Kota..."></div><div><label class="block font-bold opacity-80 mb-1">Tgl Cetak</label><input type="date" id="rekapTanggalCetakModal" class="w-full p-3 glass-input rounded-xl font-bold shadow-inner"></div><div class="sm:col-span-2"><label class="block font-bold opacity-80 mb-1">Tanda Tangan</label><select id="rekapTtdCetakModal" class="w-full p-3 glass-input rounded-xl shadow-inner"><option value="ya">Pakai TTD</option><option value="tidak">Tanpa TTD</option></select></div></div><div class="flex justify-end gap-3 border-t border-gray-500/20 pt-4"><button onclick="D('cetakRekapAbsenModal').classList.remove('active')" class="px-5 py-2.5 glass-btn rounded-xl font-bold text-sm transition hover:bg-white/20">Batal</button><button onclick="previewRekapAbsen()" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold text-sm shadow-md flex items-center gap-2"><i class="fas fa-eye"></i>Preview</button></div><div id="previewRekapAbsenModalContainer" class="hidden mt-6"><div id="previewRekapAbsenContent" class="bg-white text-black p-4 md:p-6 text-xs rounded-xl border border-gray-300 overflow-x-auto shadow-inner"></div><button onclick="printCetak('previewRekapAbsenContent')" class="w-full mt-4 py-3.5 bg-gray-800 text-white rounded-xl font-bold shadow-md flex items-center justify-center gap-2 transition hover:bg-gray-900"><i class="fas fa-print"></i>Cetak Sekarang</button></div></div></div>
+<!-- Donasi Modal -->
+<div id="donasiModal" class="modal"><div class="glass-panel rounded-3xl p-6 md:p-8 max-w-xs sm:max-w-md w-full modal-content relative overflow-hidden text-center shadow-2xl"><div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none"></div><div class="absolute bottom-0 left-0 w-32 h-32 bg-teal-500/20 rounded-full blur-3xl pointer-events-none"></div><div class="relative z-10"><div class="w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center text-4xl mx-auto mb-5 animate-pulse shadow-inner"><i class="fas fa-hand-holding-heart"></i></div><h2 class="font-orbitron font-black text-2xl mb-3 text-emerald-500 drop-shadow-md">Dukungan Anda Sangat Berarti</h2><p class="text-xs md:text-sm opacity-90 mb-6 leading-relaxed font-medium">Terima kasih telah menggunakan aplikasi ini. Jika Bapak/Ibu merasa terbantu dan selalu ingin memberikan support untuk pengembangan selanjutnya, silakan berdonasi seikhlasnya.</p><div class="bg-white/10 dark:bg-black/20 border border-emerald-500/30 rounded-3xl p-5 mb-6 text-left shadow-inner"><div class="text-[10px] uppercase font-bold opacity-70 mb-1">Bank Tujuan</div><div class="font-bold text-sm md:text-base mb-4">Bank Pembangunan Daerah (BPD) Kalbar</div><div class="text-[10px] uppercase font-bold opacity-70 mb-1">Nomor Rekening</div><div class="flex justify-between items-center bg-white/20 dark:bg-white/5 p-3 rounded-2xl mb-4 border border-white/10 shadow-sm"><span class="font-mono font-black text-xl tracking-widest text-emerald-600 dark:text-emerald-400">1152566294</span></div><div class="text-[10px] uppercase font-bold opacity-70 mb-1">Atas Nama</div><div class="font-bold text-sm md:text-base">ANDI ABDI HADI</div></div><p class="text-[10px] md:text-xs opacity-70 mb-4 italic">Silakan konfirmasikan donasi Anda melalui WhatsApp agar kami dapat mengucapkan terima kasih secara langsung.</p><a href="https://wa.me/6282155245695?text=Halo%20Mas%20Andi%2C%20saya%20sudah%20mengirimkan%20donasi%20untuk%20support%20aplikasi%20Administrasi%20Digital%20Guru." target="_blank" class="w-full py-3.5 rounded-2xl font-bold flex items-center justify-center gap-2 mb-3 btn-whatsapp shadow-lg transition hover:scale-105"><i class="fab fa-whatsapp text-xl"></i>Konfirmasi via WhatsApp</a><button onclick="closeDonasiModal()" class="w-full py-3.5 rounded-2xl font-bold glass-btn text-sm transition hover:bg-white/20">Tutup Jendela</button></div></div></div>
+<!-- Whats New Modal -->
+<div id="whatsNewModal" class="modal"><div class="glass-panel rounded-3xl p-6 md:p-8 max-w-xl w-full mx-4 shadow-2xl modal-content relative overflow-hidden max-h-[90vh] overflow-y-auto touch-pan"><div class="absolute top-0 right-0 w-40 h-40 bg-indigo-500/20 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div><div class="absolute bottom-0 left-0 w-40 h-40 bg-pink-500/20 rounded-full blur-3xl -ml-10 -mb-10 pointer-events-none"></div><div class="relative z-10"><div class="text-center mb-6 border-b border-gray-500/20 pb-5"><h2 class="font-orbitron font-black text-2xl md:text-3xl rainbow-text tracking-wide mb-2 drop-shadow-md">APLIKASI ADMINISTRASI GURU DIGITAL</h2><div class="font-bold text-sm tracking-widest opacity-90">ADMINISTRASI DIGITAL GURU <span class="bg-indigo-500 text-white px-2 py-0.5 rounded-lg text-xs ml-1 shadow-sm">v2.2</span></div></div><div class="flex flex-wrap items-center justify-between mb-5 gap-2"><h3 class="font-orbitron font-bold text-lg flex items-center gap-2 text-indigo-500"><i class="fas fa-rocket animate-pulse"></i>WHATS NEW :</h3><span class="text-xs font-black bg-indigo-500/20 text-indigo-500 px-3 py-1.5 rounded-xl border border-indigo-500/30 tracking-widest shadow-sm">12 JULI 2026</span></div><ul class="space-y-3 mb-8 text-xs md:text-sm font-bold uppercase tracking-wide"><li class="flex items-center gap-3 p-3.5 rounded-2xl glass-input transition hover:scale-[1.02] shadow-sm border-l-4 border-indigo-500"><i class="fas fa-magic text-indigo-500 text-lg w-6 text-center shrink-0"></i><span>1. HEADER RATA KIRI, MENU LEBIH RAPI</span></li><li class="flex items-center gap-3 p-3.5 rounded-2xl glass-input transition hover:scale-[1.02] shadow-sm border-l-4 border-red-500"><i class="fas fa-users-cog text-red-500 text-lg w-6 text-center shrink-0"></i><span>2. HAPUS SISWA MASAL (CHECKBOX)</span></li><li class="flex items-center gap-3 p-3.5 rounded-2xl glass-input transition hover:scale-[1.02] shadow-sm border-l-4 border-blue-500"><i class="fas fa-undo text-blue-500 text-lg w-6 text-center shrink-0"></i><span>3. FITUR RESET / KOSONGKAN ABSEN HARIAN</span></li><li class="flex items-center gap-3 p-3.5 rounded-2xl glass-input transition hover:scale-[1.02] shadow-sm border-l-4 border-yellow-500"><i class="fas fa-file-csv text-yellow-500 text-lg w-6 text-center shrink-0"></i><span>4. TEMPLATE CSV BARU (OPSI NISN)</span></li><li class="flex items-center gap-3 p-3.5 rounded-2xl glass-input transition hover:scale-[1.02] shadow-sm border-l-4 border-emerald-500"><i class="fas fa-heart text-emerald-500 text-lg w-6 text-center shrink-0"></i><span>5. SISTEM DONASI DEVELOPER</span></li><li class="flex items-center gap-3 p-3.5 rounded-2xl glass-input transition hover:scale-[1.02] shadow-sm border-l-4 border-purple-500"><i class="fas fa-mobile-alt text-purple-500 text-lg w-6 text-center shrink-0"></i><span>6. LAYAR HP SWIPEABLE 100% RESPONSIF</span></li><li class="flex items-center gap-3 p-3.5 rounded-2xl glass-input transition hover:scale-[1.02] shadow-sm border-l-4 border-orange-500"><i class="fas fa-bolt text-orange-500 text-lg w-6 text-center shrink-0"></i><span>7. SISTEM ANTI-LAG WALLPAPER & PERFORMA TINGGI</span></li></ul><div class="bg-indigo-500/10 border border-indigo-500/30 rounded-3xl p-5 text-center mb-6 shadow-inner backdrop-blur-sm"><p class="text-sm font-bold leading-relaxed mb-3 opacity-90">APLIKASI INI DIKEMBANGKAN OLEH <span class="text-indigo-500 dark:text-indigo-400 font-black">ANDI ABDI HADI</span> SEBAGAI REFERENSI UNTUK MEMPERMUDAH ADMINISTRASI GURU SECARA DIGITAL.</p><p class="text-xs font-black tracking-widest opacity-80">- SD NEGERI 61 SUNGAI RAYA, KUBU RAYA, KALIMANTAN BARAT -</p></div><div class="glass-item rounded-2xl p-5 text-center mb-5 border-t-4 border-emerald-500 shadow-sm relative overflow-hidden"><div class="absolute inset-0 bg-emerald-500/5"></div><div class="relative z-10"><p class="text-xs md:text-sm font-medium opacity-90 mb-4">Jika Bapak/Ibu merasa terbantu dan selalu ingin men-support developer, silakan dukung melalui donasi seikhlasnya.</p><button onclick="closeWhatsNewModal(); openDonasiModal();" class="w-full py-3.5 rounded-2xl font-bold bg-emerald-500 text-white shadow-md text-sm transition hover:scale-105 hover:bg-emerald-600 flex items-center justify-center gap-2"><i class="fas fa-heart"></i>Support & Donasi Aplikasi</button></div></div><button onclick="closeWhatsNewModal()" class="w-full py-4 rounded-2xl font-bold bg-red-500 hover:bg-red-600 text-white shadow-lg transition text-base md:text-lg flex items-center justify-center gap-2"><i class="fas fa-sign-out-alt"></i>Tutup & Lanjutkan</button></div></div></div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// VARS
+let isDarkTheme=false, accentColor='#007aff', currentMenu='dashboard', currentClassId=null, tempPhotoData=null, autoSaveInterval=null, tempSiswaPhotoData=null, editingSiswaId=null, currentEditSiswaId=null, currentSelectedMapelNilai=null, currentEditKolomId=null, currentEditClassId=null, selectedSiswaForAbsen=null, tempRestoreData=null, activeData=null, ambientAnimationId=null, selectedSiswaIds=[], currentEditJurnalId=null;
+let appData={profile:{namaAplikasi:'ADMINISTRASI DIGITAL GURU',namaSekolah:'',namaGuru:'',nip:'',jabatan:'',email:'',hp:'',motto:'',alamat:'',foto:null,tahunPelajaran:'2025/2026'},settings:{theme:'light',accentColor:'#007aff',fontSize:14,customBg:null,appOpacity:55,appBlur:24,appZoom:100,activeSemester:'Ganjil',menuLayout:'horizontal'},semesters:{'Ganjil':{kelas:[],currentClassId:null,siswaPhotos:{}},'Genap':{kelas:[],currentClassId:null,siswaPhotos:{}}}};
+const D=i=>document.getElementById(i), Q=s=>document.querySelector(s), QA=s=>document.querySelectorAll(s);
+function createClassData(id,nama){return{id,nama,siswa:[],mapel:[],nilaiPerMapel:{},absenSiswa:[],rpp:[],jurnal:[],jadwalPelajaran:[],durasiJamPelajaran:45};}
+
+// INIT & CORE
+function init(){
+  loadData(); updateClock(); setInterval(updateClock,1000); applyTheme(); initAmbientBackground(); applyMenuLayout();
+  showMenu('dashboard'); updateDashboard(); renderAllLists(); startAutoSave();
+  const tdy=new Date().toISOString().split('T')[0]; QA('input[type="date"]').forEach(i=>{if(!i.value)i.value=tdy;});
+}
+
+function saveData(){try{localStorage.setItem('adminGuruData',JSON.stringify(appData));updateStorageInfo();}catch(e){showToast('Gagal! Memori penyimpanan penuh.','error');}}
+function saveAllData(){appData.settings.theme=isDarkTheme?'dark':'light';appData.settings.accentColor=accentColor;if(activeData)activeData.currentClassId=currentClassId;saveData();}
+function saveAllDataManual(){saveAllData();showToast('Data tersimpan ke perangkat!','success');}
+
+function compressImage(file, maxWidth, maxHeight, quality, callback) {
+  if (file.size > 5 * 1024 * 1024) { showToast('Ukuran file maksimal 5MB!', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas'); let w = img.width; let h = img.height;
+      if (w > maxWidth || h > maxHeight) { if (w > h) { h = Math.round((h * maxWidth) / w); w = maxWidth; } else { w = Math.round((w * maxHeight) / h); h = maxHeight; } }
+      canvas.width = w; canvas.height = h; const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
+      callback(canvas.toDataURL('image/jpeg', quality));
+    }; img.src = event.target.result;
+  }; reader.readAsDataURL(file);
+}
+
+function loadData(){
+  try{
+    const sv=localStorage.getItem('adminGuruData');
+    if(sv){
+      appData=JSON.parse(sv);
+      if(!appData.semesters){appData.semesters={'Ganjil':{kelas:appData.kelas||[],currentClassId:appData.currentClassId||null,siswaPhotos:appData.siswaPhotos||{}},'Genap':{kelas:[],currentClassId:null,siswaPhotos:{}}};delete appData.kelas; delete appData.currentClassId; delete appData.siswaPhotos;}
+      if(!appData.settings.activeSemester) appData.settings.activeSemester='Ganjil';
+      if(!appData.settings.menuLayout) appData.settings.menuLayout='horizontal';
+      if(!appData.profile.tahunPelajaran) appData.profile.tahunPelajaran='2025/2026';
+      activeData=appData.semesters[appData.settings.activeSemester];
+      if(appData.settings){
+        isDarkTheme=appData.settings.theme==='dark'; accentColor=appData.settings.accentColor||'#007aff';
+        if(D('themeToggle')) D('themeToggle').checked=isDarkTheme;
+        changeFontSize(appData.settings.fontSize||14, false);
+        changeAppOpacity(appData.settings.appOpacity??55, false); changeAppBlur(appData.settings.appBlur??24, false);
+        changeAppZoom(appData.settings.appZoom??100, false);
+        if(D('bgSizeSelect')) D('bgSizeSelect').value=appData.settings.bgSize||'cover';
+        if(D('bgOpacitySlider')) D('bgOpacitySlider').value=appData.settings.bgOpacity??100;
+        applyCustomBackground(); applyMenuLayout();
+      }
+      if(activeData.kelas.length>0) currentClassId=activeData.currentClassId||activeData.kelas[0].id;
+      updateHeaderInfo();
+    }else{ activeData=appData.semesters[appData.settings.activeSemester]; updateHeaderInfo(); }
+    updateStorageInfo();
+  }catch(e){}
+}
+
+function startAutoSave(){if(autoSaveInterval)clearInterval(autoSaveInterval);autoSaveInterval=setInterval(()=>{saveAllData();showToast('Auto-Save Aktif.','success');},60000);}
+function refreshData(){saveAllData();loadData();showMenu(currentMenu);showToast('Aplikasi diperbarui!','success');}
+
+function updateStorageInfo(){
+  try{
+    const b=new Blob([JSON.stringify(appData)]).size, kb=(b/1024).toFixed(2), mb=(b/(1024*1024)).toFixed(2);
+    if(D('storageUsed')) D('storageUsed').textContent=kb>1024?`${mb} MB`:`${kb} KB`;
+    let pc=0, pb=0;
+    ['Ganjil','Genap'].forEach(s=>{const ps=appData.semesters[s].siswaPhotos;if(ps){pc+=Object.keys(ps).length;Object.values(ps).forEach(p=>{if(p) pb+=new Blob([p]).size;});}});
+    if(D('photoCount')) D('photoCount').textContent=pc;
+    if(D('photoStorageSize')) D('photoStorageSize').textContent=(pb/(1024*1024)).toFixed(2)+' MB';
+    if(D('storageBar')) D('storageBar').style.width=`${Math.min((b/(2000*1024*1024))*100,100)}%`;
+    if(D('remainingCapacity')) D('remainingCapacity').textContent=`${(2000-mb).toFixed(2)} MB`;
+  }catch(e){}
+}
+
+function cleanupOrphanedPhotos(){
+  let r=0;
+  ['Ganjil','Genap'].forEach(sem=>{
+    const ids=new Set();
+    if(appData.semesters[sem].kelas){appData.semesters[sem].kelas.forEach(k=>{if(k.siswa) k.siswa.forEach(s=>ids.add(s.id));});}
+    if(appData.semesters[sem].siswaPhotos){Object.keys(appData.semesters[sem].siswaPhotos).forEach(p=>{if(!ids.has(p)){ delete appData.semesters[sem].siswaPhotos[p]; r++; }});}
+  });
+  saveAllData(); showToast(`Cache dioptimalkan. ${r} foto dibersihkan.`,'success');
+}
+
+// UTILS & MODALS
+function showToast(msg,t){const x=D('toast');if(x){x.innerHTML=(t==='error'?'<i class="fas fa-exclamation-circle text-red-500 mr-2"></i>':'<i class="fas fa-check-circle text-blue-500 mr-2"></i>')+msg;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),3000);}}
+function showConfirm(t,m,fn){D('confirmTitle').textContent=t;D('confirmMessage').innerHTML=m;D('confirmBtn').onclick=()=>{fn();closeConfirmModal();};D('confirmModal').classList.add('active');}
+function closeConfirmModal(){D('confirmModal').classList.remove('active');}
+function openBackupModal(){ D('backupModal').classList.add('active'); }
+function closeBackupModal(){ D('backupModal').classList.remove('active'); }
+function openWhatsNewModal(){ D('whatsNewModal').classList.add('active'); }
+function closeWhatsNewModal(){ D('whatsNewModal').classList.remove('active'); }
+function openDonasiModal(){ D('donasiModal').classList.add('active'); }
+function closeDonasiModal(){ D('donasiModal').classList.remove('active'); }
+function openCetakRekapAbsen(){ D('cetakRekapAbsenModal').classList.add('active'); }
+function closeCetakRekapAbsen(){ D('cetakRekapAbsenModal').classList.remove('active'); }
+function openCetakAbsenHarian(){ D('cetakAbsenHarianModal').classList.add('active'); if(D('absenHarianTanggal').value)D('harianTanggalAbsen').value=D('absenHarianTanggal').value; }
+function closeCetakAbsenHarian(){ D('cetakAbsenHarianModal').classList.remove('active'); }
+function closeDashboardAbsenModal(){ D('dashboardAbsenModal').classList.remove('active'); }
+
+// THEME & LAYOUT
+function toggleTheme(){isDarkTheme=D('themeToggle').checked;applyTheme();saveAllData();}
+function applyTheme(){document.body.className=`h-full overflow-auto theme-${isDarkTheme?'dark':'light'}`;applyAccentColor();}
+function setAccentColor(c){accentColor=c;document.documentElement.style.setProperty('--accent-color',c);applyAccentColor();saveAllData();}
+function applyAccentColor(){QA('.menu-item').forEach(i=>{if(i.classList.contains('active')){i.style.background=accentColor;i.style.color='#fff'}else{i.style.background='';i.style.color=''}});}
+function changeFontSize(s){document.documentElement.style.fontSize=s+'px';if(D('fontSizeValue'))D('fontSizeValue').textContent=s+'px';appData.settings.fontSize=s;saveAllData();}
+function changeAppOpacity(v){document.documentElement.style.setProperty('--glass-opacity',v/100);appData.settings.appOpacity=v;saveAllData();}
+function changeAppBlur(v){document.documentElement.style.setProperty('--glass-blur',v+'px');appData.settings.appBlur=v;saveAllData();}
+function resetAppTransparency(){D('appOpacitySlider').value=55;D('appBlurSlider').value=24;changeAppOpacity(55);changeAppBlur(24);showToast('Transparansi direset ke awal.','success');}
+function changeAppZoom(v,s=true){if(D('headerZoomSlider'))D('headerZoomSlider').value=v;if(D('headerZoomValue'))D('headerZoomValue').textContent=v+'%';document.body.style.zoom=(v/100);if(s){appData.settings.appZoom=parseInt(v);saveAllData();}}
+function toggleFullscreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen().then(()=>D('fullscreenIcon').className='fas fa-compress').catch(e=>{});}else{document.exitFullscreen();D('fullscreenIcon').className='fas fa-expand';}}
+function hexToRgb(h){let r=0,g=0,b=0;if(h.length===4){r=parseInt(h[1]+h[1],16);g=parseInt(h[2]+h[2],16);b=parseInt(h[3]+h[3],16);}else if(h.length===7){r=parseInt(h.substring(1,3),16);g=parseInt(h.substring(3,5),16);b=parseInt(h.substring(5,7),16);}return`${r},${g},${b}`;}
+function initAmbientBackground(){const cv=D('dotsCanvas'),x=cv.getContext('2d');if(ambientAnimationId)cancelAnimationFrame(ambientAnimationId);const rs=()=>{cv.width=window.innerWidth;cv.height=window.innerHeight;};rs();window.addEventListener('resize',rs);const os=[{x:0.2,y:0.2,r:0.45,vx:0.0006,vy:0.0008,c:()=>accentColor},{x:0.8,y:0.8,r:0.55,vx:-0.0007,vy:-0.0005,c:()=>isDarkTheme?'#5e00ff':'#0066ff'},{x:0.8,y:0.2,r:0.35,vx:-0.0004,vy:0.0009,c:()=>isDarkTheme?'#ff0055':'#34c759'},{x:0.2,y:0.8,r:0.4,vx:0.0009,vy:-0.0006,c:()=>isDarkTheme?'#ff9500':'#ff3b30'}];const an=()=>{if(appData.settings.customBg){ambientAnimationId=requestAnimationFrame(an);return;}x.clearRect(0,0,cv.width,cv.height);const w=cv.width,h=cv.height,m=Math.max(w,h);x.fillStyle=isDarkTheme?'#000':'#e5e5ea';x.fillRect(0,0,w,h);os.forEach(o=>{o.x+=o.vx;o.y+=o.vy;if(o.x<-0.1||o.x>1.1)o.vx*=-1;if(o.y<-0.1||o.y>1.1)o.vy*=-1;const px=o.x*w,py=o.y*h,pr=o.r*m,gr=x.createRadialGradient(px,py,0,px,py,pr),rgb=hexToRgb(o.c());gr.addColorStop(0,`rgba(${rgb},${isDarkTheme?0.4:0.25})`);gr.addColorStop(1,`rgba(${rgb},0)`);x.fillStyle=gr;x.beginPath();x.arc(px,py,pr,0,Math.PI*2);x.fill();});ambientAnimationId=requestAnimationFrame(an);};an();}
+function updateClock(){const n=new Date(),ds=`${['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][n.getDay()]}, ${n.getDate()} ${['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][n.getMonth()]} ${n.getFullYear()}`;D('digitalClock').innerHTML=`<i class="far fa-clock text-xs"></i> ${n.toLocaleTimeString('id-ID')} <span class="opacity-50 mx-1">|</span> <span class="text-xs font-medium font-sans tracking-normal">${ds}</span>`;}
+function changeMenuLayout(v){appData.settings.menuLayout=v;applyMenuLayout();saveAllData();showToast('Tata letak menu diperbarui','success');}
+function applyMenuLayout(){
+  const l=appData.settings.menuLayout||'horizontal', w=D('mainLayoutWrapper'), n=D('navMenu'), ni=n.querySelector('div'), ms=n.querySelectorAll('.menu-item');
+  if(D('menuLayoutSelect'))D('menuLayoutSelect').value=l;
+  n.className='glass-panel z-20 overflow-x-auto touch-pan transition-all duration-300 scrollbar-hide scroll-smooth';
+  ni.className='flex pb-1 transition-all duration-300';
+  ms.forEach(i=>i.className='menu-item font-bold text-xs md:text-sm glass-btn flex items-center transition-all duration-200 cursor-pointer select-none');
+  
+  if(l==='sidebar'){
+    w.className='flex flex-col lg:flex-row lg:gap-6 w-full relative z-10 transition-all duration-300';
+    n.classList.add('rounded-3xl','p-2','md:p-4','mb-4','lg:mb-0','lg:w-64','xl:w-72','flex-shrink-0','lg:max-h-[85vh]','lg:overflow-y-auto');
+    ni.classList.add('gap-2','min-w-max','lg:min-w-full','lg:flex-col','lg:gap-3');
+    ms.forEach(i=>i.classList.add('px-4','md:px-5','py-3','md:py-3.5','rounded-2xl','whitespace-nowrap','justify-center','lg:w-full','lg:text-left','lg:justify-start','lg:px-6'));
+  }else{
+    w.className='flex flex-col w-full relative z-10 transition-all duration-300';
+    n.classList.add('rounded-3xl','p-2','md:p-3','mb-4','md:mb-6');
+    ni.classList.add('gap-2','min-w-max');
+    ms.forEach(i=>i.classList.add('px-4','md:px-6','py-2.5','md:py-3','rounded-2xl','whitespace-nowrap','justify-center'));
+  }
+}
+
+// CUSTOM BACKGROUND
+function handleBgUpload(e){
+  const f=e.target.files[0];if(!f)return;
+  compressImage(f, 1920, 1080, 0.6, function(compressedData) {
+    appData.settings.customBg = compressedData;
+    applyCustomBackground(); saveAllData(); showToast('Background diubah', 'success');
+  });
+  e.target.value='';
+}
+function changeBgSize(s){appData.settings.bgSize=s;applyCustomBackground();saveAllData();}
+function changeBgOpacity(v){appData.settings.bgOpacity=v;applyCustomBackground();saveAllData();}
+function resetBackground(){appData.settings.customBg=null;D('bgInput').value='';applyCustomBackground();saveAllData();showToast('Wallpaper dikembalikan ke Bawaan','success');}
+function applyCustomBackground(){const o=D('bgOverlay'),c=D('dotsCanvas');if(appData.settings.customBg){o.style.backgroundImage=`url(${appData.settings.customBg})`;o.style.backgroundSize=appData.settings.bgSize||'cover';o.style.backgroundPosition='center center';o.style.backgroundRepeat='no-repeat';o.style.backgroundAttachment='fixed';o.style.opacity=appData.settings.bgOpacity!==undefined?(appData.settings.bgOpacity/100):'1';c.style.display='none';}else{o.style.backgroundImage='none';o.style.opacity='1';c.style.display='block';}}
+
+// NAV & DASHBOARD
+window.showMenu=function(id){
+  currentMenu=id; QA('.menu-content').forEach(e=>{e.classList.add('hidden');e.style.animation='none'});
+  const t=D(id);t.classList.remove('hidden');t.style.animation='fadeIn 0.3s forwards';
+  QA('.menu-item').forEach(i=>{i.classList.remove('active');i.style.background='';i.style.color=''});
+  const a=Q(`[data-menu="${id}"]`);if(a){a.classList.add('active');applyAccentColor();}
+  if(id==='dashboard')updateDashboard();if(id==='dataSiswa')renderSiswaList();if(id==='nilaiSiswa')renderNilaiSiswaList();
+  if(id==='absenSiswa')showAbsenTab('input');if(id==='absenHarian')renderAbsenHarianSiswa();if(id==='mataPelajaran')renderMapelList();
+  if(id==='rppModul')renderRppList();if(id==='jurnalGuru'){showJurnalTab('jurnal');populateJadwalSelects();renderJadwalTable();}
+  if(id==='manajemen')renderManajemenKelas();if(id==='cetakHasil')populateCetakSelects();
+};
+
+function updateDashboard(){
+  const k=getClassData();if(!k)return;D('totalSiswa').textContent=k.siswa.length;D('siswaLaki').textContent=k.siswa.filter(s=>s.jk==='L').length;D('siswaPerempuan').textContent=k.siswa.filter(s=>s.jk==='P').length;
+  let s=0,i=0,a=0;if(k.absenSiswa)k.absenSiswa.forEach(x=>{if(x.status==='sakit')s++;else if(x.status==='izin')i++;else if(x.status==='alpa')a++;});
+  if(D('totalSakit'))D('totalSakit').textContent=s;if(D('totalIzin'))D('totalIzin').textContent=i;if(D('totalAlpa'))D('totalAlpa').textContent=a;
+  const tc=D('top5SiswaDashboard');if(tc){tc.innerHTML='';if(k.siswa.length===0)tc.innerHTML='<p class="opacity-50 text-xs font-bold text-center">Belum ada siswa.</p>';else{let ss=[];k.siswa.forEach(sw=>{let t=0,c=0;if(k.nilaiPerMapel)Object.values(k.nilaiPerMapel).forEach(m=>{m.kolomNilai.forEach(col=>{const v=m.nilaiData[sw.id]?.[col.id];if(v&&!isNaN(v)){t+=parseFloat(v);c++;}});});ss.push({n:sw.nama,t:t,a:c>0?(t/c).toFixed(1):0});});let rs=ss.filter(sw=>sw.t>0).sort((y,z)=>z.t-y.t).slice(0,5);if(rs.length===0){tc.innerHTML='<p class="opacity-50 text-xs font-bold text-center">Belum ada rekam nilai.</p>';}else{rs.forEach((sw,idx)=>{let mdl='';if(idx===0)mdl='<i class="fas fa-medal text-yellow-500 text-xl"></i>';else if(idx===1)mdl='<i class="fas fa-medal text-gray-400 text-lg"></i>';else if(idx===2)mdl='<i class="fas fa-medal text-orange-600 text-base"></i>';else mdl=`<span class="font-bold opacity-50">#${idx+1}</span>`;tc.innerHTML+=`<div class="flex justify-between items-center p-3 rounded-2xl glass-input transition hover:scale-[1.01]"><div class="flex items-center gap-2 w-8">${mdl}</div><div class="flex-1 font-bold text-sm">${sw.n}</div><div class="text-right"><span class="text-[9px] opacity-70 block uppercase tracking-wide">TOTAL: ${sw.t%1===0?sw.t:sw.t.toFixed(1)}</span><span class="font-bold text-green-500">AVG: ${sw.a}</span></div></div>`;});}}}
+}
+
+function lihatDetailSiswaDashboard(g=null){
+  const k=getClassData();if(!k)return showToast('Pilih kelas aktif!','error');const c=D('dashboardAbsenContent');c.innerHTML='';
+  let tit=g==='L'?'Laki-laki':g==='P'?'Perempuan':'Semua Siswa'; let ic=g==='L'?'fa-male text-green-500':g==='P'?'fa-female text-pink-500':'fa-users text-blue-500';
+  D('dashboardAbsenTitle').innerHTML=`<i class="fas ${ic} mr-2"></i>Daftar ${tit} <span class="text-[10px] opacity-70 normal-case font-normal hidden sm:inline">(${k.nama})</span>`;
+  let fs=g?k.siswa.filter(s=>s.jk===g):k.siswa;if(fs.length===0)c.innerHTML='<p class="text-xs text-center opacity-50 p-6 font-bold">Kosong</p>';else fs.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach((s,i)=>{let ji=s.jk==='L'?'<i class="fas fa-male text-blue-500"></i>':'<i class="fas fa-female text-pink-500"></i>';c.innerHTML+=`<div class="p-3 rounded-2xl glass-input border-l-4 ${s.jk==='L'?'border-green-500':'border-pink-500'} flex items-center justify-between mb-2"><div class="flex items-center gap-3"><span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center text-xs font-bold">${i+1}</span><span class="font-bold text-sm">${s.nama}</span></div><div class="font-black text-xs bg-white/5 px-3 py-1 rounded-xl flex items-center gap-2">${ji} ${s.jk}</div></div>`;});D('dashboardAbsenModal').classList.add('active');
+}
+function lihatDetailAbsenDashboard(st){
+  const k=getClassData();if(!k)return;const c=D('dashboardAbsenContent');c.innerHTML='';
+  let ic='',col='',tit='',bcol='';if(st==='sakit'){ic='fa-briefcase-medical';col='text-yellow-500';bcol='border-yellow-500';tit='Siswa Sakit';}else if(st==='izin'){ic='fa-file-signature';col='text-orange-500';bcol='border-orange-500';tit='Siswa Izin';}else if(st==='alpa'){ic='fa-times-circle';col='text-red-500';bcol='border-red-500';tit='Siswa Alpa';}
+  D('dashboardAbsenTitle').innerHTML=`<i class="fas ${ic} ${col} mr-2"></i> Daftar ${tit}`;
+  let rs={};if(k.absenSiswa)k.absenSiswa.forEach(a=>{if(a.status===st){if(!rs[a.siswaId])rs[a.siswaId]=[];rs[a.siswaId].push(a.tanggal);}});
+  let hd=false;k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(s=>{if(rs[s.id]&&rs[s.id].length>0){hd=true;let dts=rs[s.id].sort((x,y)=>new Date(x)-new Date(y)).map(d=>`<span class="bg-gray-500/20 px-2.5 py-1 rounded-lg text-[10px] font-semibold mr-1.5 mb-1.5 inline-block">${d}</span>`).join('');c.innerHTML+=`<div class="p-4 rounded-2xl glass-input border-l-4 ${bcol} mb-3 shadow-sm"><div class="flex justify-between items-start mb-2"><span class="font-bold text-sm flex-1">${s.nama}</span><span class="font-black text-sm ${col} bg-white/5 px-3 py-1 rounded-lg">${rs[s.id].length}x</span></div><div>${dts}</div></div>`;}});if(!hd)c.innerHTML='<p class="text-xs font-bold text-center opacity-50 p-6">Kosong</p>';D('dashboardAbsenModal').classList.add('active');
+}
+function renderAllLists(){renderSiswaList();renderMapelList();renderManajemenKelasProfile();renderManajemenKelas();}
+
+// KELAS
+function getClassData(id=currentClassId){return activeData?activeData.kelas.find(k=>k.id===id):null;}
+function openClassSelectorModal(){D('classSelectorModal').classList.add('active');const c=D('classListModal');c.innerHTML='';if(!activeData)return;activeData.kelas.forEach(k=>{c.innerHTML+=`<div class="p-4 rounded-2xl mb-2 font-bold cursor-pointer flex justify-between items-center text-sm transition hover:scale-[1.01] ${k.id===currentClassId?'bg-blue-600 text-white shadow-md':'glass-btn'}" onclick="selectClass('${k.id}')"><span>${k.nama}</span>${k.id===currentClassId?'<i class="fas fa-check-circle"></i>':''}</div>`;});}
+function closeClassSelectorModal(){D('classSelectorModal').classList.remove('active');}
+function openClassModalFromSelector(){closeClassSelectorModal();D('classModal').classList.add('active');}
+function selectClass(id){currentClassId=id;const k=getClassData();if(D('currentClassName'))D('currentClassName').textContent=k?k.nama:'Pilih Kelas';closeClassSelectorModal();showMenu(currentMenu);updateDashboard();}
+function closeClassModal(){D('classModal').classList.remove('active');}
+function simpanKelasBaru(){const n=D('modalNamaKelas').value.trim();if(n){const id='c_'+Date.now();appData.semesters['Ganjil'].kelas.push(createClassData(id,n));appData.semesters['Genap'].kelas.push(createClassData(id,n));saveAllData();closeClassModal();D('modalNamaKelas').value='';renderAllLists();showToast('Kelas baru berhasil dibuat','success');}else{showToast('Nama kelas tidak boleh kosong','error');}}
+function tambahKelasProfile(){const n=D('namaKelasProfile').value.trim();if(n){const id='c_'+Date.now();appData.semesters['Ganjil'].kelas.push(createClassData(id,n));appData.semesters['Genap'].kelas.push(createClassData(id,n));saveAllData();D('namaKelasProfile').value='';renderAllLists();showToast('Kelas baru ditambahkan','success');}else{showToast('Isi nama kelas!','error');}}
+function editKelas(id){currentEditClassId=id;const k=getClassData(id);if(k){D('editKelasInput').value=k.nama;D('editClassModal').classList.add('active');}}
+function closeEditClassModal(){D('editClassModal').classList.remove('active');currentEditClassId=null;}
+function simpanEditKelas(){const v=D('editKelasInput').value.trim();if(!v)return showToast('Nama kosong!','error');['Ganjil','Genap'].forEach(s=>{const k=appData.semesters[s].kelas.find(c=>c.id===currentEditClassId);if(k)k.nama=v;});saveAllData();closeEditClassModal();renderAllLists();if(currentEditClassId===currentClassId){if(D('currentClassName'))D('currentClassName').textContent=v;}showToast('Nama kelas berhasil diubah','success');updateDashboard();}
+function renderManajemenKelasProfile(){const c=D('manajemenKelasProfile');if(!c)return;c.innerHTML='';if(!activeData||!activeData.kelas)return;activeData.kelas.forEach(k=>{c.innerHTML+=`<div class="p-3 md:p-4 rounded-2xl glass-input mb-2 font-bold flex justify-between items-center text-sm shadow-sm"><span><i class="fas fa-door-open text-blue-500 mr-2"></i> ${k.nama}</span><div class="flex gap-2"><button onclick="editKelas('${k.id}')" class="w-8 h-8 rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-600 hover:text-white transition flex justify-center items-center" title="Ubah Nama"><i class="fas fa-pen text-xs"></i></button><button onclick="hapusKelas('${k.id}')" class="w-8 h-8 rounded-full bg-red-500/10 text-red-500 hover:bg-red-600 hover:text-white transition flex justify-center items-center" title="Hapus Permanen"><i class="fas fa-trash text-xs"></i></button></div></div>`;});}
+function renderManajemenKelas(){renderManajemenKelasProfile();}
+function hapusKelas(id){showConfirm('Hapus Ruang Kelas?','Peringatan: Seluruh data siswa, absen, dan nilai di kelas ini akan lenyap permanen dari KEDUA semester. Anda yakin?',()=>{appData.semesters['Ganjil'].kelas=appData.semesters['Ganjil'].kelas.filter(k=>k.id!==id);appData.semesters['Genap'].kelas=appData.semesters['Genap'].kelas.filter(k=>k.id!==id);if(currentClassId===id)currentClassId=null;saveAllData();renderAllLists();showToast('Kelas beserta isinya berhasil dihapus','success');});}
+
+// SINKRONISASI
+function syncDataAntarSemester(src,tgt){const s=appData.semesters[src],t=appData.semesters[tgt];if(!s||!t)return;s.kelas.forEach(c=>{const e=t.kelas.find(x=>x.id===c.id);if(!e){const cl=JSON.parse(JSON.stringify(c));cl.absenSiswa=[];cl.jurnal=[];if(cl.nilaiPerMapel)Object.keys(cl.nilaiPerMapel).forEach(m=>{cl.nilaiPerMapel[m].kolomNilai=[];cl.nilaiPerMapel[m].nilaiData={};});t.kelas.push(cl);}else{c.siswa.forEach(sw=>{if(!e.siswa.find(y=>y.id===sw.id))e.siswa.push(JSON.parse(JSON.stringify(sw)));});c.mapel.forEach(m=>{if(!e.mapel.find(y=>y.id===m.id))e.mapel.push(JSON.parse(JSON.stringify(m)));});}});if(s.siswaPhotos){if(!t.siswaPhotos)t.siswaPhotos={};Object.keys(s.siswaPhotos).forEach(p=>{if(!t.siswaPhotos[p])t.siswaPhotos[p]=s.siswaPhotos[p];});}if(!t.currentClassId&&s.currentClassId)t.currentClassId=s.currentClassId;}
+function syncSemesterData(){const g=appData.semesters['Ganjil'];if(!g||!g.kelas||g.kelas.length===0)return showToast('Ganjil kosong!','error');showConfirm('Sync ke Genap','Salin Kelas, Siswa, Mapel ke Genap? (Nilai & Absen genap akan kosong)',()=>{const c=JSON.parse(JSON.stringify(g.kelas));c.forEach(k=>{k.absenSiswa=[];k.jurnal=[];if(k.nilaiPerMapel)Object.keys(k.nilaiPerMapel).forEach(m=>{k.nilaiPerMapel[m].kolomNilai=[];k.nilaiPerMapel[m].nilaiData={};});});appData.semesters['Genap'].kelas=c;appData.semesters['Genap'].currentClassId=g.currentClassId;if(g.siswaPhotos)appData.semesters['Genap'].siswaPhotos=JSON.parse(JSON.stringify(g.siswaPhotos));saveAllData();if(appData.settings.activeSemester==='Genap')refreshData();showToast('Sync Sukses!','success');});}
+
+// PROFILE 
+function simpanProfile(){
+  appData.profile.namaAplikasi=D('namaAplikasi').value; appData.profile.namaSekolah=D('namaSekolah').value; appData.profile.namaGuru=D('namaGuru').value; appData.profile.nip=D('nipGuru').value; appData.profile.jabatan=D('jabatanGuru').value; appData.profile.email=D('emailGuru').value; appData.profile.hp=D('hpGuru').value; appData.profile.motto=D('mottoGuru').value; appData.profile.alamat=D('alamatGuru').value; appData.profile.tahunPelajaran=D('tahunPelajaran').value;
+  const ns=D('semesterAktif').value;
+  if(ns!==appData.settings.activeSemester){
+    showConfirm('Ganti Semester?',`Beralih ke ${ns}?`,()=>{
+      syncDataAntarSemester(appData.settings.activeSemester,ns); appData.settings.activeSemester=ns; activeData=appData.semesters[ns]; currentClassId=activeData.kelas.length>0?(activeData.currentClassId||activeData.kelas[0].id):null; const k=getClassData(); if(D('currentClassName'))D('currentClassName').textContent=k?k.nama:'Pilih Kelas'; updateHeaderInfo(); saveAllData(); refreshData(); showToast(`Beralih ke ${ns}`,'success');
+    });
+  }else{ updateHeaderInfo(); saveAllData(); showToast('Profile Disimpan','success'); }
+}
+function updateHeaderInfo(){
+  const p=appData.profile;
+  if(D('appTitle')) D('appTitle').textContent=p.namaAplikasi||'ADMINISTRASI DIGITAL GURU';
+  if(D('schoolName')) D('schoolName').textContent=p.namaSekolah||'Nama Sekolah';
+  if(D('teacherName')) D('teacherName').textContent=p.namaGuru||'Nama Guru';
+  if(D('mottoText')) D('mottoText').textContent=p.motto?`"${p.motto}"`:'"Motto"';
+  
+  if(D('namaAplikasi')) D('namaAplikasi').value=p.namaAplikasi||'';
+  if(D('namaSekolah')) D('namaSekolah').value=p.namaSekolah||'';
+  if(D('namaGuru')) D('namaGuru').value=p.namaGuru||'';
+  if(D('nipGuru')) D('nipGuru').value=p.nip||'';
+  if(D('jabatanGuru')) D('jabatanGuru').value=p.jabatan||'';
+  if(D('emailGuru')) D('emailGuru').value=p.email||'';
+  if(D('hpGuru')) D('hpGuru').value=p.hp||'';
+  if(D('mottoGuru')) D('mottoGuru').value=p.motto||'';
+  if(D('alamatGuru')) D('alamatGuru').value=p.alamat||'';
+  if(D('tahunPelajaran')) D('tahunPelajaran').value=p.tahunPelajaran||'2025/2026';
+  if(D('semesterAktif')) D('semesterAktif').value=appData.settings.activeSemester||'Ganjil';
+  
+  if(D('headerSemesterInfo')) D('headerSemesterInfo').innerHTML=`<span class="bg-blue-500/20 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-xl text-xs font-bold border border-blue-500/30 whitespace-nowrap shadow-sm"><i class="fas fa-bookmark mr-1"></i> Sem. ${appData.settings.activeSemester} • ${p.tahunPelajaran||'2025/2026'}</span>`;
+  if(p.foto){ D('profilePhoto').src=p.foto; D('profilePhoto').classList.remove('hidden'); D('profilePlaceholder').classList.add('hidden'); }
+}
+function openPhotoModal(){D('photoModal').classList.add('active');}
+function closePhotoModal(){D('photoModal').classList.remove('active');}
+function previewPhoto(e){const f=e.target.files[0];if(!f)return;compressImage(f,600,600,0.8,function(compressedData){tempPhotoData=compressedData;D('photoPreview').innerHTML=`<img src="${tempPhotoData}" class="w-full h-full object-cover">`;});e.target.value='';}
+function simpanPhoto(){if(tempPhotoData){appData.profile.foto=tempPhotoData;updateHeaderInfo();saveAllData();showToast('Foto Profil Disimpan','success');}closePhotoModal();}
+
+// DATA SISWA
+function checkSiswaSelection(){const cbs=QA('.siswa-checkbox');selectedSiswaIds=Array.from(cbs).filter(c=>c.checked).map(c=>c.value);D('btnHapusTerpilih').classList.toggle('hidden',selectedSiswaIds.length===0);}
+function togglePilihSemuaSiswa(){const cbs=QA('.siswa-checkbox');const allChecked=Array.from(cbs).every(c=>c.checked);cbs.forEach(c=>c.checked=!allChecked);checkSiswaSelection();}
+function hapusSiswaTerpilih(){if(selectedSiswaIds.length===0)return;showConfirm('Hapus Masal',`Yakin menghapus ${selectedSiswaIds.length} siswa terpilih selamanya dari database?`,()=>{const k=getClassData();k.siswa=k.siswa.filter(x=>!selectedSiswaIds.includes(x.id));if(k.absenSiswa)k.absenSiswa=k.absenSiswa.filter(a=>!selectedSiswaIds.includes(a.siswaId));selectedSiswaIds=[];saveAllData();renderSiswaList();updateDashboard();D('btnHapusTerpilih').classList.add('hidden');showToast('Beberapa Siswa Telah Dihapus','success');});}
+function tambahSiswa(){const k=getClassData();if(!k)return showToast('Pilih ruang kelas yang aktif dulu!','error');const n=D('namaSiswa').value.trim(),jk=D('jkSiswa').value;if(!n||!jk)return showToast('Nama & Jenis Kelamin (JK) wajib diisi!','error');if(editingSiswaId){const s=k.siswa.find(x=>x.id===editingSiswaId);if(s){s.nama=n;s.jk=jk;s.nisn=D('nisSiswa').value;s.agama=D('agamaSiswa').value;s.namaAyah=D('namaAyah').value;s.namaIbu=D('namaIbu').value;s.hp=D('hpOrtu').value;}editingSiswaId=null;D('btnTambahSiswa').innerHTML='<i class="fas fa-check-circle mr-2"></i> Simpan Siswa Baru';showToast('Kartu Siswa Diperbarui','success');}else{k.siswa.push({id:'s_'+Date.now(),nama:n,jk,nisn:D('nisSiswa').value,agama:D('agamaSiswa').value,namaAyah:D('namaAyah').value,namaIbu:D('namaIbu').value,hp:D('hpOrtu').value});showToast('Siswa Baru Masuk Database','success');}['namaSiswa','nisSiswa','jkSiswa','agamaSiswa','namaAyah','namaIbu','hpOrtu'].forEach(i=>D(i).value='');saveAllData();renderSiswaList();updateDashboard();}
+function renderSiswaList(){const k=getClassData(),c=D('siswaList');if(!c)return;c.innerHTML='';if(!k||k.siswa.length===0){c.innerHTML='<p class="opacity-50 font-bold p-6 text-center col-span-full">Kelas ini masih kosong. Silakan Input atau Import CSV.</p>';return;}const q=D('searchSiswa')?.value.toLowerCase()||'',o=D('filterAbjad')?.value||'asc';let fs=k.siswa.filter(s=>s.nama.toLowerCase().includes(q));fs.sort((a,b)=>o==='asc'?a.nama.localeCompare(b.nama):b.nama.localeCompare(a.nama));fs.forEach(s=>{const pu=activeData.siswaPhotos[s.id];c.innerHTML+=`<div class="p-4 glass-item rounded-3xl flex justify-between items-center transition hover:scale-[1.02] shadow-sm"><div class="flex items-center gap-3"><input type="checkbox" class="siswa-checkbox w-5 h-5 accent-red-500 rounded cursor-pointer shrink-0 mr-1" value="${s.id}" onchange="checkSiswaSelection()"><div class="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center text-xl font-bold cursor-pointer overflow-hidden border border-blue-500/30 shrink-0 shadow-inner" onclick="openSiswaPhotoModal('${s.id}')">${pu?`<img src="${pu}" class="w-full h-full object-cover">`:s.jk==='L'?'<i class="fas fa-male"></i>':'<i class="fas fa-female text-pink-500"></i>'}</div><div class="overflow-hidden"><div class="font-bold text-sm md:text-base leading-tight mb-1 truncate w-full max-w-[140px] sm:max-w-[200px]">${s.nama}</div><div class="text-[10px] md:text-xs opacity-60 font-semibold uppercase tracking-widest">NISN: ${s.nisn||'-'}</div></div></div><div class="flex flex-col gap-1.5 shrink-0"><button onclick="editSiswa('${s.id}')" class="w-8 h-8 rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-600 hover:text-white transition flex justify-center items-center"><i class="fas fa-pen text-xs"></i></button><button onclick="hapusSiswa('${s.id}')" class="w-8 h-8 rounded-full bg-red-500/10 text-red-500 hover:bg-red-600 hover:text-white transition flex justify-center items-center"><i class="fas fa-trash text-xs"></i></button></div></div>`;});checkSiswaSelection();}
+function editSiswa(id){const k=getClassData(),s=k.siswa.find(x=>x.id===id);if(!s)return;['namaSiswa','nisSiswa','jkSiswa','agamaSiswa','namaAyah','namaIbu','hpOrtu'].forEach(i=>D(i).value=s[i.replace('Siswa','').replace('Ortu','').toLowerCase()]||s[i.replace('Siswa','')]||s.jk||'');editingSiswaId=id;D('btnTambahSiswa').innerHTML='<i class="fas fa-check-circle mr-2"></i> Update Data Siswa';D('dataSiswa').scrollIntoView({behavior:'smooth'});}
+function hapusSiswa(id){showConfirm('Hapus Siswa?','Aksi ini bersifat permanen dan tidak bisa dikembalikan. Lanjutkan?',()=>{const k=getClassData();k.siswa=k.siswa.filter(x=>x.id!==id);if(k.absenSiswa)k.absenSiswa=k.absenSiswa.filter(a=>a.siswaId!==id);saveAllData();renderSiswaList();updateDashboard();showToast('1 Siswa Dihapus','success');});}
+function filterSiswa(){renderSiswaList();}
+function openSiswaPhotoModal(id){currentEditSiswaId=id;D('siswaPhotoModal').classList.add('active');const p=activeData.siswaPhotos[id];D('siswaPhotoPreview').innerHTML=p?`<img src="${p}" class="w-full h-full object-cover">`:'<div class="w-full h-full flex items-center justify-center text-4xl text-gray-400"><i class="fas fa-user"></i></div>';}
+function closeSiswaPhotoModal(){D('siswaPhotoModal').classList.remove('active');tempSiswaPhotoData=null;currentEditSiswaId=null;}
+function previewSiswaPhoto(e){const f=e.target.files[0];if(!f)return;compressImage(f, 500, 500, 0.7, function(compressedData){tempSiswaPhotoData = compressedData;D('siswaPhotoPreview').innerHTML = `<img src="${tempSiswaPhotoData}" class="w-full h-full object-cover">`;});e.target.value='';}
+function simpanSiswaPhoto(){if(currentEditSiswaId&&tempSiswaPhotoData){activeData.siswaPhotos[currentEditSiswaId]=tempSiswaPhotoData;saveAllData();renderSiswaList();renderAbsenHarianSiswa();showToast('Foto Siswa Diperbarui','success');}closeSiswaPhotoModal();}
+function openImportModal(){D('importModal').classList.add('active');D('csvFile').value='';}
+function closeImportModal(){D('importModal').classList.remove('active');}
+
+function processImportCSV(){
+  const f=D('csvFile').files[0];if(!f)return showToast('Pilih file CSV dulu!','error');const k=getClassData();if(!k)return showToast('Pilih Kelas Aktif!','error');const rd=new FileReader();
+  rd.onload=e=>{
+    try{
+      const ls=e.target.result.split('\n').filter(l=>l.trim());if(ls.length<2)return showToast('File CSV Kosong/Tidak Valid','error');
+      const d=ls[0].includes(';')?';':',',pl=s=>{const c=[];let q=false,cr='';for(let x of s){if(x==='"')q=!q;else if(x===d&&!q){c.push(cr.trim());cr='';}else cr+=x;}c.push(cr.trim());return c;};
+      const hs=pl(ls[0]).map(h=>h.toUpperCase().replace(/"/g,'').trim());
+      const ni=hs.findIndex(h=>h==='NAMA SISWA'||h==='NAMA'),ji=hs.findIndex(h=>h==='JENIS KELAMIN'||h==='L/P'||h==='JK'),ns=hs.findIndex(h=>h==='NISN');
+      if(ni<0||ji<0)return showToast('Format Header Salah! Butuh kolom NAMA SISWA & JENIS KELAMIN','error');
+      let c=0;
+      for(let i=1;i<ls.length;i++){
+        const cl=pl(ls[i]).map(x=>x.replace(/"/g,'').trim());if(cl.length<=Math.max(ni,ji))continue;
+        const n=cl[ni];let jk=(cl[ji]||'').toUpperCase();if(!n)continue;
+        jk=(jk.includes('P')||jk==='PUTRI')?'P':'L';
+        const nsn=ns>=0?cl[ns]:'';
+        k.siswa.push({id:'s_'+Date.now()+c+'_'+Math.floor(Math.random()*1000),nama:n,jk,nisn:nsn,agama:'',namaAyah:'',namaIbu:'',hp:''});c++;
+      }
+      saveAllData();renderSiswaList();updateDashboard();closeImportModal();showToast(`Berhasil import ${c} data siswa!`,'success');
+    }catch(er){showToast('Gagal memproses/parsing CSV','error');}
+  };rd.readAsText(f);
+}
+
+function downloadTemplateCSV(){const b=new Blob(['NO,NAMA SISWA,JENIS KELAMIN,NISN\n1,"Andi Setiawan",L,1234567890\n2,"Budi Raharjo",L,\n3,"Citra Kirana",P,0987654321\n'],{type:'text/csv'});const u=URL.createObjectURL(b),a=document.createElement('a');a.style.display='none';a.href=u;a.download='Template_Data_Siswa.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);showToast('Template Berhasil Diunduh','success');}
+function exportDataSiswaCSV(){const k=getClassData();if(!k||!k.siswa.length)return showToast('Tidak ada data siswa untuk didownload!','error');let c='NO,NISN,NAMA SISWA,L/P,NAMA AYAH,NAMA IBU,AGAMA,HP\n';k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach((s,i)=>{c+=`${i+1},"${s.nisn||''}","${s.nama}","${s.jk}","${s.namaAyah||''}","${s.namaIbu||''}","${s.agama||''}","${s.hp||''}"\n`;});const b=new Blob([c],{type:'text/csv'}),u=URL.createObjectURL(b),a=document.createElement('a');a.style.display='none';a.href=u;a.download=`Data_Lengkap_Siswa_${k.nama.replace(/\s+/g,'_')}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);showToast('Data Lengkap Siswa Berhasil Diunduh','success');}
+
+// MAPEL & NILAI
+function tambahMapel(){const k=getClassData(),n=D('namaMapel').value.trim();if(!k||!n)return showToast('Isi nama mapel!','error');k.mapel.push({id:'m_'+Date.now(),nama:n});D('namaMapel').value='';saveAllData();renderMapelList();showToast('Mata Pelajaran Ditambahkan','success');}
+function renderMapelList(){const k=getClassData(),c=D('mapelList');if(!c)return;c.innerHTML='';if(!k||k.mapel.length===0){c.innerHTML='<p class="opacity-50 text-sm font-bold p-6">Belum ada mapel ditambahkan.</p>';return;}k.mapel.forEach(m=>{c.innerHTML+=`<div class="p-5 glass-item rounded-3xl flex justify-between items-center font-bold text-base shadow-sm"><span class="truncate pr-3"><i class="fas fa-bookmark text-orange-500 mr-2"></i> ${m.nama}</span><button onclick="hapusMapel('${m.id}')" class="w-8 h-8 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition flex items-center justify-center shrink-0"><i class="fas fa-trash text-xs"></i></button></div>`;});}
+function hapusMapel(id){showConfirm('Hapus Mapel?','Seluruh rekapan nilai pada mapel ini juga akan terhapus. Lanjutkan?',()=>{const k=getClassData();k.mapel=k.mapel.filter(m=>m.id!==id);saveAllData();renderMapelList();if(currentSelectedMapelNilai===id){currentSelectedMapelNilai=null;D('kolomPenilaianSection').classList.add('hidden');D('nilaiSiswaListContainer').innerHTML='';}showToast('Mata Pelajaran Dihapus','success');});}
+function changeSelectedMapelNilai(){currentSelectedMapelNilai=D('selectedMapelNilai').value;if(currentSelectedMapelNilai){D('kolomPenilaianSection').classList.remove('hidden');renderKolomPenilaianPerMapel();renderNilaiSiswaList();}else{D('kolomPenilaianSection').classList.add('hidden');D('nilaiSiswaListContainer').innerHTML='';}}
+function renderKolomPenilaianPerMapel(){const k=getClassData(),m=k.mapel.find(x=>x.id===currentSelectedMapelNilai),c=D('listKolomPenilaian');c.innerHTML='';if(m)D('currentMapelName').textContent=`(${m.nama})`;if(!k.nilaiPerMapel)k.nilaiPerMapel={};if(!k.nilaiPerMapel[currentSelectedMapelNilai])k.nilaiPerMapel[currentSelectedMapelNilai]={kolomNilai:[],nilaiData:{}};k.nilaiPerMapel[currentSelectedMapelNilai].kolomNilai.forEach(col=>{c.innerHTML+=`<span class="px-4 py-2 glass-input rounded-xl text-sm font-bold shadow-sm flex gap-3 items-center whitespace-nowrap">${col.nama}<span class="flex gap-2 ml-2 border-l border-gray-500/30 pl-2"><i class="fas fa-pen text-blue-500 cursor-pointer hover:scale-110 transition" onclick="editKolomPenilaian('${col.id}')"></i><i class="fas fa-times text-red-500 cursor-pointer hover:scale-110 transition" onclick="hapusKolomPenilaian('${col.id}')"></i></span></span>`;});}
+function tambahKolomPenilaian(){const v=D('namaKolomPenilaian').value.trim();if(!v)return;getClassData().nilaiPerMapel[currentSelectedMapelNilai].kolomNilai.push({id:'c_'+Date.now(),nama:v});D('namaKolomPenilaian').value='';saveAllData();renderKolomPenilaianPerMapel();renderNilaiSiswaList();}
+function editKolomPenilaian(id){currentEditKolomId=id;const c=getClassData().nilaiPerMapel[currentSelectedMapelNilai].kolomNilai.find(x=>x.id===id);if(c){D('editKolomInput').value=c.nama;D('editKolomModal').classList.add('active');}}
+function closeEditKolomModal(){D('editKolomModal').classList.remove('active');currentEditKolomId=null;}
+function simpanEditKolom(){const v=D('editKolomInput').value.trim();if(!v)return;getClassData().nilaiPerMapel[currentSelectedMapelNilai].kolomNilai.find(x=>x.id===currentEditKolomId).nama=v;saveAllData();closeEditKolomModal();renderKolomPenilaianPerMapel();renderNilaiSiswaList();}
+function hapusKolomPenilaian(id){showConfirm('Hapus Kolom Nilai?','Nilai-nilai siswa di kolom ini akan hilang selamanya.',()=>{getClassData().nilaiPerMapel[currentSelectedMapelNilai].kolomNilai=getClassData().nilaiPerMapel[currentSelectedMapelNilai].kolomNilai.filter(x=>x.id!==id);saveAllData();renderKolomPenilaianPerMapel();renderNilaiSiswaList();});}
+function populateMapelNilaiSelect(){const k=getClassData(),s=D('selectedMapelNilai');if(!s)return;s.innerHTML='<option value="">-- Sentuh untuk Pilih Mapel --</option>';if(k&&k.mapel)k.mapel.forEach(m=>s.innerHTML+=`<option value="${m.id}">${m.nama}</option>`);if(currentSelectedMapelNilai&&k&&k.mapel.find(m=>m.id===currentSelectedMapelNilai))s.value=currentSelectedMapelNilai;else currentSelectedMapelNilai=null;}
+function renderNilaiSiswaList(){const k=getClassData(),c=D('nilaiSiswaListContainer');if(!c)return;if(D('nilaiKelasName'))D('nilaiKelasName').textContent=k?k.nama:'';if(D('totalSiswaKelas'))D('totalSiswaKelas').textContent=k?k.siswa.length:0;if(D('totalMapelKelas'))D('totalMapelKelas').textContent=k&&k.mapel?k.mapel.length:0;populateMapelNilaiSelect();c.innerHTML='';if(!k||k.siswa.length===0){c.innerHTML='<p class="text-center font-bold opacity-50 p-6">Belum ada data siswa.</p>';return;}if(!currentSelectedMapelNilai){c.innerHTML='<p class="text-center font-bold opacity-50 p-6">Silakan pilih Mata Pelajaran di atas untuk membuka lembar nilai.</p>';return;}const md=k.nilaiPerMapel[currentSelectedMapelNilai];if(!md.kolomNilai.length){c.innerHTML='<p class="text-center font-bold opacity-50 p-6 text-sm">Buat kolom dulu.</p>';return;}k.siswa.forEach((s,i)=>{let t=0,cnt=0;md.kolomNilai.forEach(col=>{const v=md.nilaiData[s.id]?.[col.id];if(v){t+=parseFloat(v);cnt++;}});const avg=cnt>0?(t/cnt).toFixed(1):0;let ins='';md.kolomNilai.forEach(col=>{const val=md.nilaiData[s.id]?.[col.id]||'';ins+=`<div><label class="block text-[10px] font-bold opacity-60 uppercase mb-1.5 truncate" title="${col.nama}">${col.nama}</label><input type="number" value="${val}" onchange="updateNilaiPerMapel('${s.id}','${col.id}',this.value)" class="w-full glass-input p-2.5 rounded-xl text-center font-bold text-sm shadow-inner" placeholder="-"></div>`;});c.innerHTML+=`<div class="p-5 glass-item rounded-3xl transition-all hover:scale-[1.01] shadow-sm"><div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-500/20"><div class="font-bold text-base md:text-lg flex items-center gap-3"><span class="w-7 h-7 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center text-xs shrink-0">${i+1}</span><span class="truncate max-w-[150px] sm:max-w-full">${s.nama}</span></div><div class="text-right shrink-0"><div class="text-[9px] font-bold uppercase opacity-60">Rata-rata</div><div class="font-orbitron text-2xl font-black ${avg>=75?'text-green-500':'text-red-500'}">${avg}</div></div></div><div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">${ins}</div></div>`;});}
+function updateNilaiPerMapel(sid,cid,v){const md=getClassData().nilaiPerMapel[currentSelectedMapelNilai];if(!md.nilaiData[sid])md.nilaiData[sid]={};md.nilaiData[sid][cid]=v;saveAllData();renderNilaiSiswaList();}
+
+function downloadTemplateNilaiCsv(){const k=getClassData();if(!k)return showToast('Pilih Kelas!','error');let c='NO,NAMA SISWA,TOTAL NILAI\n';k.siswa.forEach((s,i)=>c+=`${i+1},"${s.nama}",\n`);const b=new Blob([c],{type:'text/csv'}),u=URL.createObjectURL(b),a=document.createElement('a');a.style.display='none';a.href=u;a.download=`Template_Nilai_${k.nama.replace(/\s+/g,'_')}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);showToast('Format Excel Unduh Berhasil','info');}
+function importRekapNilaiPerMapel(e){
+  const f=e.target.files[0];if(!f||!currentSelectedMapelNilai)return;
+  const k=getClassData(),m=k.mapel.find(x=>x.id===currentSelectedMapelNilai),rd=new FileReader();
+  rd.onload=evt=>{
+    try{
+      const ls=evt.target.result.split('\n').filter(l=>l.trim());if(ls.length<2)return showToast('File CSV tidak valid','error');
+      const d=ls[0].includes(';')?';':',',pl=s=>{const c=[];let q=false,cr='';for(let x of s){if(x==='"')q=!q;else if(x===','&&!q){c.push(cr.trim());cr='';}else cr+=x;}c.push(cr.trim());return c;};
+      const hs=pl(ls[0]).map(h=>h.toUpperCase().replace(/"/g,'')),ni=hs.indexOf('NAMA SISWA'),vi=hs.indexOf('TOTAL NILAI');
+      if(ni<0||vi<0)return showToast('Format Header Salah! Butuh kolom NAMA SISWA & TOTAL NILAI','error');
+      let inc=0;
+      for(let i=1;i<ls.length;i++){
+        const cl=pl(ls[i]).map(x=>x.replace(/"/g,''));if(cl.length<2)continue;
+        const sw=k.siswa.find(s=>s.nama.toUpperCase()===cl[ni]?.toUpperCase());
+        if(sw){
+          const vl=parseFloat(cl[vi]);
+          if(!isNaN(vl)){
+            const md=k.nilaiPerMapel[m.id];let col=md.kolomNilai.find(x=>x.nama==='Import CSV');
+            if(!col){col={id:'c_'+Date.now(),nama:'Import CSV'};md.kolomNilai.push(col);}
+            if(!md.nilaiData[sw.id])md.nilaiData[sw.id]={};md.nilaiData[sw.id][col.id]=vl; inc++;
+          }
+        }
+      }
+      saveAllData();renderKolomPenilaianPerMapel();renderNilaiSiswaList();showToast(`Sukses Import Nilai (${inc} Siswa)`,'success');
+    }catch(err){showToast('Gagal memproses file CSV','error');}
+  };rd.readAsText(f);e.target.value='';
+}
+function downloadRekapNilaiPerMapel(){const k=getClassData();if(!k||!currentSelectedMapelNilai)return showToast('Pilih Mapel dulu!','error');const m=k.mapel.find(x=>x.id===currentSelectedMapelNilai);let c='NO,NAMA SISWA,RATA RATA NILAI\n';k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach((s,i)=>{let t=0,cnt=0;const md=k.nilaiPerMapel[m.id];if(md){md.kolomNilai.forEach(col=>{const v=md.nilaiData[s.id]?.[col.id];if(v){t+=parseFloat(v);cnt++;}});}c+=`${i+1},"${s.nama}",${cnt>0?(t/cnt).toFixed(1):0}\n`;});const b=new Blob([c],{type:'text/csv'}),u=URL.createObjectURL(b),a=document.createElement('a');a.style.display='none';a.href=u;a.download=`Rekap_Nilai_${m.nama.replace(/\s+/g,'_')}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);showToast('Rekap Mapel Diunduh','success');}
+function downloadDaftarNilaiLengkapCSV(){const k=getClassData();if(!k)return;if(k.siswa.length===0)return showToast('Belum ada siswa','error');let c='NO,NAMA SISWA,';k.mapel.forEach(m=>c+=`"${m.nama}",`);c+='TOTAL RATA-RATA\n';k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach((s,i)=>{let r=`${i+1},"${s.nama}",`,ta=0;k.mapel.forEach(m=>{let t=0,cnt=0,md=k.nilaiPerMapel[m.id];if(md)md.kolomNilai.forEach(col=>{const v=md.nilaiData[s.id]?.[col.id];if(v){t+=parseFloat(v);cnt++;}});let a=cnt>0?(t/cnt).toFixed(1):0;ta+=parseFloat(a);r+=`${a},`;});c+=`${r}${ta.toFixed(1)}\n`;});const b=new Blob([c],{type:'text/csv'}),u=URL.createObjectURL(b),a=document.createElement('a');a.style.display='none';a.href=u;a.download=`Daftar_Nilai_Lengkap_${k.nama.replace(/\s+/g,'_')}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);showToast('Daftar Nilai Lengkap Diunduh','success');}
+
+// ABSENSI (HARIAN, RESET & REKAP)
+function renderAbsenHarianSiswa(){
+  const k=getClassData(),t=D('absenHarianTanggal')?.value,c=D('absenHarianGrid');if(!c||!k||!t)return;c.innerHTML='';let h=0,s=0,iz=0,a=0;
+  k.siswa.forEach(sw=>{const e=k.absenSiswa.find(x=>x.siswaId===sw.id&&x.tanggal===t),st=e?e.status:'';if(st==='hadir')h++;else if(st==='sakit')s++;else if(st==='izin')iz++;else if(st==='alpa')a++;});
+  if(D('statHadir'))D('statHadir').textContent=h;if(D('statSakit'))D('statSakit').textContent=s;if(D('statIzin'))D('statIzin').textContent=iz;if(D('statAlpa'))D('statAlpa').textContent=a;
+  
+  const q=D('searchAbsen')?.value.toLowerCase()||'',jk=D('filterJkAbsen')?.value||'';let fs=k.siswa.filter(sw=>sw.nama.toLowerCase().includes(q)&&(jk===''||sw.jk===jk));
+  fs.sort((c,d)=>D('filterAbjadAbsen')?.value==='desc'?d.nama.localeCompare(c.nama):c.nama.localeCompare(d.nama)).forEach(sw=>{
+    const e=k.absenSiswa.find(x=>x.siswaId===sw.id&&x.tanggal===t),st=e?e.status:'',pu=activeData.siswaPhotos[sw.id];
+    let cl='rgba(150,150,150,0.5)',gr='glass-item',ic='fa-user',dp='';
+    if(st==='hadir'){cl='#10b981';gr='bg-green-500/20';ic='fa-check-circle';dp='drop-shadow-[0_0_8px_#10b981]';}
+    else if(st==='sakit'){cl='#eab308';gr='bg-yellow-500/20';ic='fa-briefcase-medical';dp='drop-shadow-[0_0_8px_#eab308]';}
+    else if(st==='izin'){cl='#f97316';gr='bg-orange-500/20';ic='fa-file-signature';dp='drop-shadow-[0_0_8px_#f97316]';}
+    else if(st==='alpa'){cl='#ef4444';gr='bg-red-500/20';ic='fa-times-circle';dp='drop-shadow-[0_0_8px_#ef4444]';}
+    let phtm=pu?`<img src="${pu}" class="absolute inset-0 w-full h-full object-cover opacity-${st?'30':'50'} mix-blend-overlay rounded-3xl">`:'';
+    c.innerHTML+=`<div class="p-3 md:p-4 rounded-2xl md:rounded-3xl ${gr} text-center cursor-pointer transition-all hover:scale-105 active:scale-95 border border-white/10 relative overflow-hidden shadow-sm" onclick="openAbsenModal('${sw.id}','${t}')">${phtm}<i class="fas ${ic} text-2xl md:text-3xl ${dp} relative z-10 mb-2" style="color:${cl}"></i><div class="text-[10px] md:text-xs font-bold truncate tracking-wide relative z-10" style="text-shadow:0px 1px 2px rgba(0,0,0,0.5);color:${st?cl:''}">${sw.nama.split(' ')[0]}</div></div>`;
+  });
+}
+function showAbsenTab(tb){QA('.absen-tab-content').forEach(e=>e.classList.add('hidden'));QA('.absen-tab').forEach(e=>e.classList.replace('bg-blue-600','glass-btn'));D(tb==='input'?'inputAbsenContent':'rekapAbsenContent').classList.remove('hidden');const b=Q(`[data-tab="${tb}"]`);if(b){b.classList.replace('glass-btn','bg-blue-600');b.classList.add('text-white')}if(tb==='input')renderAbsenSiswaList();else renderRekapAbsenBulanan();}
+function renderAbsenSiswaList(){
+  const k=getClassData(),t=D('tglAbsenSiswa').value,c=D('absenSiswaList');c.innerHTML='';if(!k||!t)return;
+  k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach((s,i)=>{
+    const e=k.absenSiswa.find(x=>x.siswaId===s.id&&x.tanggal===t),v=e?e.status:'';
+    c.innerHTML+=`<div class="p-4 rounded-3xl glass-item flex flex-col md:flex-row justify-between items-center gap-4 hover:bg-white/5 transition shadow-sm"><div class="font-bold flex items-center gap-3 text-sm w-full md:w-auto"><span class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-500 flex items-center justify-center shrink-0">${i+1}</span><span class="truncate max-w-[150px] sm:max-w-full">${s.nama}</span></div><div class="flex bg-black/20 p-1.5 rounded-2xl overflow-hidden w-full md:w-max"><label class="flex-1 text-center py-2.5 px-3 rounded-xl cursor-pointer text-xs font-bold transition ${v==='hadir'?'bg-green-500 text-white shadow-md':'opacity-60 hover:opacity-100'}"><input type="radio" class="hidden" name="ab_${s.id}" onclick="updateAbsenIndividu('${s.id}','${t}','hadir')" ${v==='hadir'?'checked':''}>Hadir</label><label class="flex-1 text-center py-2.5 px-3 rounded-xl cursor-pointer text-xs font-bold transition ${v==='sakit'?'bg-yellow-500 text-white shadow-md':'opacity-60 hover:opacity-100'}"><input type="radio" class="hidden" name="ab_${s.id}" onclick="updateAbsenIndividu('${s.id}','${t}','sakit')" ${v==='sakit'?'checked':''}>Sakit</label><label class="flex-1 text-center py-2.5 px-3 rounded-xl cursor-pointer text-xs font-bold transition ${v==='izin'?'bg-orange-500 text-white shadow-md':'opacity-60 hover:opacity-100'}"><input type="radio" class="hidden" name="ab_${s.id}" onclick="updateAbsenIndividu('${s.id}','${t}','izin')" ${v==='izin'?'checked':''}>Izin</label><label class="flex-1 text-center py-2.5 px-3 rounded-xl cursor-pointer text-xs font-bold transition ${v==='alpa'?'bg-red-500 text-white shadow-md':'opacity-60 hover:opacity-100'}"><input type="radio" class="hidden" name="ab_${s.id}" onclick="updateAbsenIndividu('${s.id}','${t}','alpa')" ${v==='alpa'?'checked':''}>Alpa</label><label class="flex-1 text-center py-2.5 px-3 rounded-xl cursor-pointer text-xs font-bold transition bg-gray-500 text-white opacity-40 hover:opacity-100 ml-1 shadow-inner" title="Kosongkan/Reset"><input type="radio" class="hidden" name="ab_${s.id}" onclick="updateAbsenIndividu('${s.id}','${t}','reset')"><i class="fas fa-undo"></i></label></div></div>`;
+  });
+}
+function updateAbsenIndividu(id,t,st){const k=getClassData(),i=k.absenSiswa.findIndex(x=>x.siswaId===id&&x.tanggal===t);if(st==='reset'||st===''){if(i>=0)k.absenSiswa.splice(i,1);}else{if(i>=0)k.absenSiswa[i].status=st;else k.absenSiswa.push({id:'a_'+Date.now(),siswaId:id,tanggal:t,status:st});}saveAllData();renderAbsenHarianSiswa();renderAbsenSiswaList();}
+function simpanAbsenSiswa(){showToast('Absensi Disimpan!','success');}
+function openAbsenModal(id,t){
+  selectedSiswaForAbsen={id,t};const s=getClassData().siswa.find(x=>x.id===id);
+  showConfirm(`Absensi: ${s.nama.split(' ')[0]}`,`<div class="grid grid-cols-2 gap-3 mt-4"><button class="bg-green-600 text-white font-bold py-3.5 rounded-2xl shadow-md text-sm transition hover:scale-105" onclick="setAbsenStatus('hadir')">HADIR</button><button class="bg-yellow-600 text-white font-bold py-3.5 rounded-2xl shadow-md text-sm transition hover:scale-105" onclick="setAbsenStatus('sakit')">SAKIT</button><button class="bg-orange-600 text-white font-bold py-3.5 rounded-2xl shadow-md text-sm transition hover:scale-105" onclick="setAbsenStatus('izin')">IZIN</button><button class="bg-red-600 text-white font-bold py-3.5 rounded-2xl shadow-md text-sm transition hover:scale-105" onclick="setAbsenStatus('alpa')">ALPA</button><button class="col-span-2 glass-btn font-bold py-3.5 rounded-2xl shadow-inner text-sm transition hover:scale-105 flex items-center justify-center gap-2" onclick="setAbsenStatus('reset')"><i class="fas fa-undo"></i> Reset / Kosongkan</button></div>`,()=>{});
+}
+function setAbsenStatus(st){updateAbsenIndividu(selectedSiswaForAbsen.id,selectedSiswaForAbsen.t,st);closeConfirmModal();showToast('Status Diperbarui','success');}
+
+function renderRekapAbsenBulanan(){const k=getClassData(),bm=D('bulanRekapAbsen').value,ba=D('bulanRekapAbsenAkhir').value||bm,c=D('rekapAbsenTableBody');c.innerHTML='';if(!k||!bm)return;k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach((s,i)=>{let h=0,sk=0,iz=0,a=0;k.absenSiswa.forEach(ab=>{const am=ab.tanggal.substring(0,7);if(ab.siswaId===s.id&&am>=bm&&am<=ba){if(ab.status==='hadir')h++;else if(ab.status==='sakit')sk++;else if(ab.status==='izin')iz++;else if(ab.status==='alpa')a++;}});c.innerHTML+=`<tr class="border-b border-gray-500/20 hover:bg-white/5 transition"><td class="p-4 text-center font-bold">${i+1}</td><td class="p-4 font-bold truncate max-w-[150px]">${s.nama}</td><td class="p-4 text-center font-bold opacity-70">${s.jk}</td><td class="p-4 text-center font-bold text-green-500 text-lg">${h}</td><td class="p-4 text-center font-bold text-yellow-500 text-lg">${sk}</td><td class="p-4 text-center font-bold text-orange-500 text-lg">${iz}</td><td class="p-4 text-center font-bold text-red-500 text-lg">${a}</td><td class="p-4 text-center"><button onclick="lihatDetailAbsenBulanan('${s.id}','${bm}','${ba}')" class="bg-blue-600 text-white px-3.5 py-2 rounded-xl text-xs shadow-md hover:scale-110 transition flex items-center justify-center mx-auto gap-2"><i class="fas fa-search"></i></button></td></tr>`;});}
+function lihatDetailAbsenBulanan(id,bm,ba){const k=getClassData(),s=k.siswa.find(x=>x.id===id),c=D('detailAbsenContent');c.innerHTML='';D('detailAbsenTitle').innerHTML=`<i class="fas fa-list text-blue-500 mr-2"></i> ${s.nama}`;k.absenSiswa.forEach(ab=>{const am=ab.tanggal.substring(0,7);if(ab.siswaId===id&&am>=bm&&am<=ba){const col=ab.status==='hadir'?'green':ab.status==='sakit'?'yellow':ab.status==='izin'?'orange':'red';c.innerHTML+=`<div class="p-3.5 glass-input rounded-xl mb-2 flex justify-between font-bold text-sm border-l-4 border-${col}-500 shadow-sm"><span>${ab.tanggal}</span> <b class="text-${col}-500 uppercase tracking-widest">${ab.status}</b></div>`;}});if(!c.innerHTML)c.innerHTML='<p class="opacity-50 font-bold p-6 text-center">Rekam kehadiran bersih.</p>';D('detailAbsenModal').classList.add('active');}
+function closeDetailAbsenModal(){D('detailAbsenModal').classList.remove('active');}
+
+function downloadRekapAbsenBulanan(){const k=getClassData(),bm=D('bulanRekapAbsen').value,ba=D('bulanRekapAbsenAkhir').value||bm;if(!k||!bm)return showToast('Pilih bulan dulu','error');let c='NO,NAMA SISWA,L/P,HADIR,SAKIT,IZIN,ALPA\n';k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach((s,i)=>{let h=0,sk=0,iz=0,a=0;k.absenSiswa.forEach(ab=>{const am=ab.tanggal.substring(0,7);if(ab.siswaId===s.id&&am>=bm&&am<=ba){if(ab.status==='hadir')h++;else if(ab.status==='sakit')sk++;else if(ab.status==='izin')iz++;else if(ab.status==='alpa')a++;}});c+=`${i+1},"${s.nama}",${s.jk},${h},${sk},${iz},${a}\n`;});const b=new Blob([c],{type:'text/csv'}),u=URL.createObjectURL(b),l=document.createElement('a');l.style.display='none';l.href=u;l.download=`Rekap_Absen_${bm}.csv`;document.body.appendChild(l);l.click();document.body.removeChild(l);showToast('Rekap Excel Berhasil Diunduh','success');}
+
+// CETAK HASIL BELAJAR
+function populateCetakSelects(){const k=getClassData(),s=D('cetakSiswaSelect');if(s&&k){s.innerHTML='<option value="">-- Sentuh untuk Pilih Siswa --</option>';k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(sw=>s.innerHTML+=`<option value="${sw.id}">${sw.nama}</option>`);}
+const c=D('peringkatSiswaList');if(c&&k){c.innerHTML='';let ss=[];k.siswa.forEach(sw=>{let t=0,cnt=0;if(k.nilaiPerMapel)Object.values(k.nilaiPerMapel).forEach(m=>{m.kolomNilai.forEach(col=>{const v=m.nilaiData[sw.id]?.[col.id];if(v){t+=parseFloat(v);cnt++;}});});ss.push({...sw,avg:cnt>0?parseFloat((t/cnt).toFixed(2)):0});});ss.sort((a,b)=>b.avg-a.avg).slice(0,5).forEach((sw,i)=>{let mdl=i===0?'<i class="fas fa-medal text-yellow-500 text-3xl drop-shadow-md"></i>':i===1?'<i class="fas fa-medal text-gray-400 text-2xl"></i>':i===2?'<i class="fas fa-medal text-amber-600 text-xl"></i>':`<span class="opacity-50 font-bold text-lg">#${i+1}</span>`;c.innerHTML+=`<div class="flex justify-between items-center p-4 rounded-3xl glass-input mb-3 hover:scale-[1.02] transition shadow-sm"><div class="flex gap-4 items-center w-12 justify-center">${mdl}</div><div class="flex-1 font-bold text-base truncate px-2">${sw.nama}</div><div class="font-orbitron font-black text-2xl text-blue-500">${sw.avg.toFixed(2)}</div></div>`;});}}
+function toggleCetakOptions(){D('cetakSiswaSelect').style.display=D('jenisCetak').value==='kolektif'?'none':'block';}
+function previewCetak(){const k=getClassData(),j=D('jenisCetak').value,tp=D('tempatCetak').value||'...',tc=D('tanggalCetak').value,tcs=tc?new Date(tc).toLocaleDateString('id-ID'):'...';let ht=`<div style="text-align:center;border-bottom:3px solid #000;padding-bottom:10px;margin-bottom:20px;"><h2 style="margin:0;font-size:18px;text-transform:uppercase;">${appData.profile.namaSekolah||'SEKOLAH'}</h2><p style="margin:5px 0 0 0;font-size:12px;">${appData.profile.alamat||'Alamat'}</p></div>`;if(j==='individu'){const sid=D('cetakSiswaSelect').value;if(!sid)return showToast('Pilih nama siswa terlebih dahulu!','error');const s=k.siswa.find(x=>x.id===sid);ht+=`<h3 style="font-size:14px;text-align:center;">LAPORAN HASIL BELAJAR</h3><table style="border:none;width:100%;margin-bottom:15px;font-size:12px"><tr><td style="border:none;width:100px;padding:3px;">Nama Siswa</td><td style="border:none;padding:3px;">: <b>${s.nama}</b></td><td style="border:none;width:100px;padding:3px;">Kelas</td><td style="border:none;padding:3px;">: <b>${k.nama}</b></td></tr><tr><td style="border:none;padding:3px;">NISN</td><td style="border:none;padding:3px;">: ${s.nisn||'-'}</td><td style="border:none;"></td><td style="border:none;"></td></tr></table><table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:12px;"><tr style="background:#f2f2f2"><th style="border:1px solid #000;padding:6px;width:50px;text-align:center;">NO</th><th style="border:1px solid #000;padding:6px;">MATA PELAJARAN</th><th style="border:1px solid #000;padding:6px;text-align:center;">NILAI RATA-RATA</th></tr>`;let t=0,c=0;k.mapel.forEach((m,i)=>{let mt=0,mc=0,md=k.nilaiPerMapel[m.id];if(md)md.kolomNilai.forEach(col=>{const v=md.nilaiData[s.id]?.[col.id];if(v){mt+=parseFloat(v);mc++;}});const a=mc>0?(mt/mc).toFixed(2):0;if(a>0){t+=parseFloat(a);c++;}ht+=`<tr><td style="border:1px solid #000;padding:6px;text-align:center;">${i+1}</td><td style="border:1px solid #000;padding:6px;">${m.nama}</td><td style="border:1px solid #000;padding:6px;text-align:center;font-weight:bold;">${a||'-'}</td></tr>`;});ht+=`<tr><th colspan="2" style="border:1px solid #000;padding:6px;text-align:right;">RATA-RATA KESELURUHAN</th><th style="border:1px solid #000;padding:6px;text-align:center;font-size:14px;">${c>0?(t/c).toFixed(2):0}</th></tr></table>`;}else{ht+=`<h3 style="font-size:14px;text-align:center;margin-bottom:15px;text-transform:uppercase;">LEGER NILAI KELAS ${k.nama}</h3><table style="width:100%;border-collapse:collapse;font-size:10px;"><tr style="background:#f2f2f2"><th rowspan="2" style="border:1px solid #000;padding:4px;text-align:center;">NO</th><th rowspan="2" style="border:1px solid #000;padding:4px;">NAMA SISWA</th><th rowspan="2" style="border:1px solid #000;padding:4px;text-align:center;">L/P</th><th colspan="${k.mapel.length}" style="border:1px solid #000;padding:4px;text-align:center;">MATA PELAJARAN</th><th rowspan="2" style="border:1px solid #000;padding:4px;text-align:center;">AVG</th></tr><tr>`;k.mapel.forEach(m=>ht+=`<th style="border:1px solid #000;padding:4px;text-align:center;font-size:9px;">${m.nama.substring(0,8)}</th>`);ht+=`</tr>`;k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach((s,i)=>{ht+=`<tr><td style="border:1px solid #000;padding:4px;text-align:center;">${i+1}</td><td style="border:1px solid #000;padding:4px;">${s.nama}</td><td style="border:1px solid #000;padding:4px;text-align:center;">${s.jk}</td>`;let t=0,c=0;k.mapel.forEach(m=>{let mt=0,mc=0,md=k.nilaiPerMapel[m.id];if(md)md.kolomNilai.forEach(col=>{const v=md.nilaiData[s.id]?.[col.id];if(v){mt+=parseFloat(v);mc++;}});const a=mc>0?(mt/mc).toFixed(1):'-';if(a!=='-'){t+=parseFloat(a);c++;}ht+=`<td style="border:1px solid #000;padding:4px;text-align:center;">${a}</td>`;});ht+=`<td style="border:1px solid #000;padding:4px;text-align:center;font-weight:bold;">${c>0?(t/c).toFixed(2):'-'}</td></tr>`;});ht+=`</table>`;}if(D('ttdCetak').value==='ya'){ht+=`<div style="display:flex;justify-content:flex-end;margin-top:40px;font-size:12px;page-break-inside:avoid;"><div style="width:250px;text-align:center;"><p>${tp}, ${tcs}</p><p>Guru Kelas</p><br><br><br><br><p><b>${appData.profile.namaGuru||'_________________'}</b></p><p>NIP. ${appData.profile.nip||''}</p></div></div>`;}D('previewContent').innerHTML=ht;D('previewCetak').classList.remove('hidden');D('previewCetak').scrollIntoView({behavior:'smooth'});}
+function printCetak(id){const w=window.open('','_blank');w.document.write(`<html><head><style>@page{margin:1cm;}</style></head><body style="font-family:Arial,sans-serif">${D(id).innerHTML}</body></html>`);w.document.close();setTimeout(()=>w.print(),500);}
+function previewAbsenHarian(){const k=getClassData(),t=D('harianTanggalAbsen').value,tp=D('harianTempatCetak').value||'...',tc=D('harianTanggalCetak').value,tcs=tc?new Date(tc).toLocaleDateString('id-ID'):'...';if(!k||!t)return showToast('Isi Tanggal Absen Dulu!','error');const tsd=new Date(t).toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});let ht=`<div style="text-align:center;border-bottom:2px solid #000;margin-bottom:15px;padding-bottom:10px;"><h2 style="margin:0;font-size:18px;">${appData.profile.namaSekolah||'SEKOLAH'}</h2></div><h3 style="font-size:14px;text-align:center;margin-bottom:15px;">DAFTAR HADIR SISWA</h3><p style="font-size:12px;margin-bottom:10px;"><b>Kelas:</b> ${k.nama} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Tanggal:</b> ${tsd}</p><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:#f2f2f2"><th style="border:1px solid #000;padding:6px;text-align:center;width:40px">NO</th><th style="border:1px solid #000;padding:6px;text-align:left">NAMA SISWA</th><th style="border:1px solid #000;padding:6px;text-align:center">L/P</th><th style="border:1px solid #000;padding:6px;text-align:center">STATUS</th><th style="border:1px solid #000;padding:6px;text-align:left">KETERANGAN</th></tr></thead><tbody>`;let h=0,s=0,iz=0,a=0;k.siswa.sort((x,y)=>x.nama.localeCompare(y.nama)).forEach((sw,i)=>{const ex=k.absenSiswa.find(z=>z.siswaId===sw.id&&z.tanggal===t);let st=ex?ex.status:'-';if(st==='hadir'){st='Hadir';h++;}else if(st==='sakit'){st='Sakit';s++;}else if(st==='izin'){st='Izin';iz++;}else if(st==='alpa'){st='Alpa';a++;}ht+=`<tr><td style="border:1px solid #000;padding:6px;text-align:center;">${i+1}</td><td style="border:1px solid #000;padding:6px;">${sw.nama}</td><td style="border:1px solid #000;padding:6px;text-align:center;">${sw.jk}</td><td style="border:1px solid #000;padding:6px;text-align:center;font-weight:bold;">${st}</td><td style="border:1px solid #000;padding:6px;"></td></tr>`;});ht+=`</tbody></table><div style="font-size:12px;margin-top:10px;"><p><b>Rekapitulasi:</b> Hadir: ${h}, Sakit: ${s}, Izin: ${iz}, Alpa: ${a}</p></div>`;if(D('harianTtdCetak').value==='ya'){ht+=`<div style="display:flex;justify-content:flex-end;margin-top:30px;font-size:12px;page-break-inside:avoid;"><div style="width:250px;text-align:center;"><p>${tp}, ${tcs}</p><p>Guru Kelas</p><br><br><br><br><p><b>${appData.profile.namaGuru||'_________________'}</b></p><p>NIP. ${appData.profile.nip||''}</p></div></div>`;}D('previewAbsenHarianContent').innerHTML=ht;D('previewAbsenHarian').classList.remove('hidden');}
+function previewRekapAbsen(){const k=getClassData(),bm=D('rekapTanggalAbsenModal').value,ba=D('rekapTanggalAbsenModalAkhir').value||bm,tp=D('rekapTempatCetakModal').value||'...',tc=D('rekapTanggalCetakModal').value,tcs=tc?new Date(tc).toLocaleDateString('id-ID'):'...';if(!k||!bm)return showToast('Pilih bulan rekap!','error');const rStr=bm===ba?bm:`${bm} s.d ${ba}`;let ht=`<div style="text-align:center;border-bottom:2px solid #000;margin-bottom:15px;padding-bottom:10px;"><h2 style="margin:0;font-size:18px;text-transform:uppercase;">${appData.profile.namaSekolah||'SEKOLAH'}</h2></div><h3 style="font-size:14px;text-align:center;margin-bottom:15px;">REKAPITULASI ABSEN BULANAN</h3><p style="font-size:12px;margin-bottom:10px;"><b>Kelas:</b> ${k.nama} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>Bulan:</b> ${rStr}</p><table style="width:100%;border-collapse:collapse;font-size:12px;"><tr style="background:#f2f2f2"><th style="border:1px solid #000;padding:6px;text-align:center;width:40px;">NO</th><th style="border:1px solid #000;padding:6px;text-align:left;">NAMA SISWA</th><th style="border:1px solid #000;padding:6px;text-align:center;">L/P</th><th style="border:1px solid #000;padding:6px;text-align:center;">HADIR</th><th style="border:1px solid #000;padding:6px;text-align:center;">SAKIT</th><th style="border:1px solid #000;padding:6px;text-align:center;">IZIN</th><th style="border:1px solid #000;padding:6px;text-align:center;">ALPA</th></tr>`;k.siswa.sort((a,b)=>a.nama.localeCompare(b.nama)).forEach((s,i)=>{let h=0,sk=0,iz=0,al=0;k.absenSiswa.forEach(ab=>{const am=ab.tanggal.substring(0,7);if(ab.siswaId===s.id&&am>=bm&&am<=ba){if(ab.status==='hadir')h++;else if(ab.status==='sakit')sk++;else if(ab.status==='izin')iz++;else if(ab.status==='alpa')al++;}});ht+=`<tr><td style="border:1px solid #000;padding:6px;text-align:center;">${i+1}</td><td style="border:1px solid #000;padding:6px;">${s.nama}</td><td style="border:1px solid #000;padding:6px;text-align:center;">${s.jk}</td><td style="border:1px solid #000;padding:6px;text-align:center;">${h}</td><td style="border:1px solid #000;padding:6px;text-align:center;">${sk}</td><td style="border:1px solid #000;padding:6px;text-align:center;">${iz}</td><td style="border:1px solid #000;padding:6px;text-align:center;">${al}</td></tr>`;});ht+=`</table>`;if(D('rekapTtdCetakModal').value==='ya'){ht+=`<div style="display:flex;justify-content:flex-end;margin-top:30px;font-size:12px;page-break-inside:avoid;"><div style="width:250px;text-align:center;"><p>${tp}, ${tcs}</p><p>Guru Kelas</p><br><br><br><br><p><b>${appData.profile.namaGuru||'_________________'}</b></p><p>NIP. ${appData.profile.nip||''}</p></div></div>`;}D('previewRekapAbsenContent').innerHTML=ht;D('previewRekapAbsenModalContainer').classList.remove('hidden');}
+
+// RPP / MODUL
+function showRppTab(tb){QA('.rpp-tab-content').forEach(e=>e.classList.add('hidden'));QA('.rpp-tab').forEach(e=>e.classList.replace('bg-blue-600','glass-btn'));QA('.rpp-tab').forEach(e=>e.classList.remove('text-white'));D(tb==='pustaka'?'rppPustakaContent':'rppPustakaContent').classList.remove('hidden');const b=Q(`[data-tab="${tb}"]`);if(b){b.classList.replace('glass-btn','bg-blue-600');b.classList.add('text-white');}}
+function tambahRpp(){const k=getClassData(),j=D('judulRpp').value,l=D('linkRpp').value;if(!k||!j)return showToast('Judul Wajib!','error');k.rpp.push({id:Date.now(),judul:j,link:l});saveAllData();renderRppList();D('judulRpp').value='';D('linkRpp').value='';showToast('Tersimpan!','success');}
+function renderRppList(){const k=getClassData(),c=D('rppList');if(!c)return;c.innerHTML='';if(!k||!k.rpp||k.rpp.length===0){c.innerHTML='<p class="opacity-50 font-bold p-6 text-center col-span-full">Belum ada RPP/Modul tersimpan.</p>';return;}k.rpp.forEach(r=>{c.innerHTML+=`<div class="p-5 glass-item rounded-3xl font-bold border-t-4 border-yellow-500 flex justify-between items-center text-sm md:text-base transition hover:scale-[1.02] shadow-sm"><span class="truncate pr-4">${r.judul}</span><a href="${r.link}" target="_blank" class="w-10 h-10 rounded-full bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 flex items-center justify-center shrink-0 hover:scale-110 transition shadow-inner"><i class="fas fa-external-link-alt"></i></a></div>`;});}
+
+// JURNAL & JADWAL
+function showJurnalTab(tb){QA('.jurnal-tab-content').forEach(e=>e.classList.add('hidden'));QA('.jurnal-tab').forEach(e=>e.classList.replace('bg-pink-600','glass-btn'));D(tb==='jurnal'?'jurnalHarianContent':'jadwalPelajaranContent').classList.remove('hidden');const b=Q(`[data-tab="${tb}"]`);if(b)b.classList.replace('glass-btn','bg-pink-600');if(tb==='jadwal'){populateJadwalSelects();renderJadwalTable();}}
+function renderJurnalList(){const k=getClassData(),c=D('jurnalList');if(!c||!k)return;c.innerHTML='';if(!k.jurnal||k.jurnal.length===0)return c.innerHTML='<p class="opacity-50 p-6 font-bold text-center">Jurnal masih kosong.</p>';k.jurnal.sort((a,b)=>b.tanggal.localeCompare(a.tanggal)).forEach(j=>{c.innerHTML+=`<div class="p-5 glass-item rounded-3xl border-l-4 border-pink-500 shadow-sm transition hover:scale-[1.01] flex flex-col md:flex-row justify-between items-start md:items-center gap-3"><div class="flex-1"><div class="text-[10px] md:text-xs opacity-60 mb-2 font-bold tracking-widest uppercase flex items-center gap-2"><i class="fas fa-calendar-day"></i> ${j.tanggal}</div><div class="text-sm md:text-base font-bold">${j.materi}</div></div><div class="flex gap-2 shrink-0 w-full md:w-auto justify-end mt-2 md:mt-0"><button onclick="editJurnal('${j.id}')" class="w-8 h-8 rounded-full bg-blue-500/10 text-blue-500 hover:bg-blue-600 hover:text-white transition flex items-center justify-center" title="Edit Jurnal"><i class="fas fa-pen text-xs"></i></button><button onclick="hapusJurnalHarian('${j.id}')" class="w-8 h-8 rounded-full bg-red-500/10 text-red-500 hover:bg-red-600 hover:text-white transition flex items-center justify-center" title="Hapus Jurnal"><i class="fas fa-trash text-xs"></i></button></div></div>`;});}
+function tambahJurnal(){const k=getClassData(),t=D('tglJurnal').value,m=D('materiJurnal').value;if(t&&m){if(!k.jurnal)k.jurnal=[];if(currentEditJurnalId){const j=k.jurnal.find(x=>x.id===currentEditJurnalId);if(j){j.tanggal=t;j.materi=m;}currentEditJurnalId=null;D('btnSimpanJurnal').innerHTML='<i class="fas fa-paper-plane"></i> <span class="hidden sm:inline">Simpan</span>';showToast('Jurnal Diperbarui','success');}else{k.jurnal.push({id:'jrn_'+Date.now(),tanggal:t,materi:m});showToast('Jurnal Terposting','success');}saveAllData();renderJurnalList();D('materiJurnal').value='';}else{showToast('Tanggal dan Materi Wajib!','error');}}
+function editJurnal(id){const k=getClassData();if(!k)return;const j=k.jurnal.find(x=>x.id===id);if(j){D('tglJurnal').value=j.tanggal;D('materiJurnal').value=j.materi;currentEditJurnalId=id;D('btnSimpanJurnal').innerHTML='<i class="fas fa-save"></i> <span class="hidden sm:inline">Update</span>';D('jurnalGuru').scrollIntoView({behavior:'smooth'});}}
+function hapusJurnalHarian(id){showConfirm('Hapus Jurnal?','Apakah Anda yakin ingin menghapus catatan ini?',()=>{const k=getClassData();if(!k)return;k.jurnal=k.jurnal.filter(x=>x.id!==id);saveAllData();renderJurnalList();showToast('Jurnal Dihapus','success');});}
+function previewJurnal(type){const k=getClassData();let f=[];let tl="";if(!k||!k.jurnal||k.jurnal.length===0)return showToast('Tidak ada data jurnal','error');if(type==='harian'){const t=D('tglJurnalCetak').value;if(!t)return showToast('Pilih Tanggal!','error');f=k.jurnal.filter(j=>j.tanggal===t);tl="HARIAN - "+t;}else{const b=D('blnJurnalCetak').value;if(!b)return showToast('Pilih Bulan!','error');f=k.jurnal.filter(j=>j.tanggal.startsWith(b));f.sort((a,b)=>a.tanggal.localeCompare(b.tanggal));tl="BULANAN - "+b;}if(f.length===0)return showToast('Tidak ada jurnal di rentang waktu tsb','error');let ht=`<div style="font-family:Arial;padding:20px;font-size:12px;"><div style="text-align:center;border-bottom:2px solid #000;margin-bottom:20px;padding-bottom:10px;"><h2 style="margin:0;font-size:16px;text-transform:uppercase;">${appData.profile.namaSekolah||'SEKOLAH'}</h2><h3 style="margin:5px 0 0 0;font-size:14px;">AGENDA JURNAL GURU ${tl}</h3></div><p><b>Nama Guru:</b> ${appData.profile.namaGuru} &nbsp;&nbsp;&nbsp;&nbsp; <b>Kelas:</b> ${k.nama}</p><table style="width:100%;border-collapse:collapse;margin-top:10px;"><tr style="background:#f2f2f2"><th style="border:1px solid #000;padding:6px;width:100px;text-align:left;">Tanggal</th><th style="border:1px solid #000;padding:6px;text-align:left;">Kegiatan / Materi Pelajaran</th></tr>${f.map(j=>`<tr><td style="border:1px solid #000;padding:6px;vertical-align:top;">${j.tanggal}</td><td style="border:1px solid #000;padding:6px;">${j.materi}</td></tr>`).join('')}</table><div style="margin-top:40px;text-align:right;page-break-inside:avoid;"><p>Mengetahui,<br>Guru Kelas</p><br><br><br><b>${appData.profile.namaGuru}</b><br>NIP. ${appData.profile.nip||''}</div></div>`;const w=window.open('','_blank');w.document.write(ht);w.document.close();setTimeout(()=>w.print(),500);}
+function populateJadwalSelects(){const k=getClassData(),s=D('jadwalMapelSelect');if(s&&k){s.innerHTML='<option value="__MANUAL__">-- Input Manual --</option>';k.mapel.forEach(m=>s.innerHTML+=`<option value="${m.nama}">${m.nama}</option>`);D('durasiJamPelajaran').value=k.durasiJamPelajaran||45;}}
+function simpanDurasiJP(){const k=getClassData();if(!k)return;k.durasiJamPelajaran=parseInt(D('durasiJamPelajaran').value)||45;saveAllData();hitungWaktuSelesai();showToast('Durasi 1 JP Disimpan','success');}
+function toggleJadwalFields(){const j=D('jenisJadwal').value;if(j!=='pelajaran'){D('mapelManualField').style.display='none';D('mapelField').style.display='none';}else{D('mapelField').style.display='block';toggleManualMapel();}}
+function toggleManualMapel(){D('mapelManualField').style.display=D('jadwalMapelSelect').value==='__MANUAL__'?'block':'none';}
+function hitungWaktuSelesai(){const k=getClassData(),w=D('waktuMulaiJadwal').value,jp=parseFloat(D('jumlahJP').value)||0,d=k?k.durasiJamPelajaran||45:45;if(w&&jp>0){const[h,m]=w.split(':').map(Number),tm=h*60+m+(jp*d);D('waktuSelesaiJadwal').value=`${String(Math.floor(tm/60)%24).padStart(2,'0')}:${String(Math.floor(tm%60)).padStart(2,'0')}`;}}
+function tambahJadwal(){const k=getClassData(),j=D('jenisJadwal').value;if(!k)return showToast('Pilih Kelas!','error');let m='';if(j==='pelajaran'){m=D('jadwalMapelSelect').value;if(m==='__MANUAL__')m=D('namaMapelManual').value;}else{const ty={'upacara':'🇮🇩 Upacara','sholat':'🕌 Sholat','istirahat':'☕ Istirahat','mbg':'🍱 Makan Bergizi Gratis','ekskul':'⚽ Ekstrakurikuler'};m=ty[j];}const guru=D('namaGuruJadwal').value,jp=parseFloat(D('jumlahJP').value)||0,hari=D('hariJadwal').value,mulai=D('waktuMulaiJadwal').value,selesai=D('waktuSelesaiJadwal').value,ket=D('keteranganJadwal').value;if(!m||jp<=0)return showToast('Mapel/Kegiatan dan Jumlah JP Wajib Diisi!','error');if(!k.jadwalPelajaran)k.jadwalPelajaran=[];k.jadwalPelajaran.push({id:'j_'+Date.now(),jenis:j,namaMapel:m,guru,jp,hari,mulai,selesai,ket});saveAllData();renderJadwalTable();showToast('Jadwal ditambahkan','success');resetFormJadwal();}
+function hapusJadwal(id){const k=getClassData();k.jadwalPelajaran=k.jadwalPelajaran.filter(x=>x.id!==id);saveAllData();renderJadwalTable();showToast('Jadwal dihapus','success');}
+function resetFormJadwal(){D('jumlahJP').value='';D('keteranganJadwal').value='';D('namaMapelManual').value='';D('jenisJadwal').value='pelajaran';toggleJadwalFields();hitungWaktuSelesai();}
+function renderJadwalTable(){const k=getClassData(),tb=D('jadwalTableBody'),fh=D('filterHariJadwal').value;if(!tb||!k)return;tb.innerHTML='';if(!k.jadwalPelajaran||k.jadwalPelajaran.length===0){tb.innerHTML='<tr><td colspan="6" class="p-6 text-center opacity-50 font-bold">Jadwal masih kosong</td></tr>';return;}let f=k.jadwalPelajaran;if(fh)f=f.filter(x=>x.hari===fh);const d={'Senin':1,'Selasa':2,'Rabu':3,'Kamis':4,'Jumat':5,'Sabtu':6};f.sort((a,b)=>d[a.hari]-d[b.hari]||a.mulai.localeCompare(b.mulai)).forEach((j,i)=>{let c=j.jenis==='pelajaran'?'bg-blue-500/10':'bg-gray-500/10';tb.innerHTML+=`<tr class="border-b border-gray-500/20 ${c} hover:bg-white/5 transition"><td class="p-4 font-bold text-blue-500">${j.mulai} - ${j.selesai}</td><td class="p-4 font-bold">${j.hari}</td><td class="p-4">${j.namaMapel}</td><td class="p-4">${j.guru||'-'}</td><td class="p-4 text-center font-bold">${j.jp} JP</td><td class="p-4 text-center"><button onclick="hapusJadwal('${j.id}')" class="text-red-500 hover:scale-110 p-2"><i class="fas fa-trash"></i></button></td></tr>`;});let tj=0,sT={'Senin':0,'Selasa':0,'Rabu':0,'Kamis':0,'Jumat':0,'Sabtu':0};k.jadwalPelajaran.forEach(x=>{if(x.jenis==='pelajaran'){tj+=x.jp;sT[x.hari]+=x.jp;}});if(D('totalJamMinggu'))D('totalJamMinggu').textContent=tj+' JP';}
+
+// BACKUP & RESTORE
+function executeExport() {
+  saveAllData(); const t=D('backupTypeSelect').value; let ed={};
+  if(t==='full'){ed=appData;}else{ed={backupFormat:'single_semester',semester:t,profile:appData.profile,settings:appData.settings,data:appData.semesters[t]};}
+  try{
+    const b=new Blob([JSON.stringify(ed)],{type:'application/json'});
+    const u=URL.createObjectURL(b);
+    const a=document.createElement('a');
+    a.style.display='none';
+    a.href=u;
+    a.download=`Backup_Data_${t}_${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(u);},150);
+    D('backupModal').classList.remove('active');
+    showToast('File Backup Diunduh!','success');
+  }catch(err){showToast('Gagal membuat file backup','error');}
+}
+
+function importData(e){
+  const f=e.target.files[0],rd=new FileReader();if(!f)return;
+  rd.onload=ev=>{
+    try{
+      tempRestoreData=JSON.parse(ev.target.result); const ms=D('restoreModal'),sel=D('restoreTypeSelect');sel.innerHTML='';
+      if(tempRestoreData.backupFormat==='single_semester')sel.innerHTML=`<option value="single">Pulihkan Data (Semester ${tempRestoreData.semester})</option>`;
+      else if(tempRestoreData.semesters)sel.innerHTML=`<option value="full">Timpa Semua Data</option><option value="ganjil">Semester Ganjil Saja</option><option value="genap">Semester Genap Saja</option>`;
+      else sel.innerHTML=`<option value="legacy">Format Lama</option>`;
+      ms.classList.add('active');
+    }catch(er){showToast('File tidak valid / rusak!','error');}
+  };rd.readAsText(f);e.target.value='';
+}
+
+function executeRestore(){
+  if(!tempRestoreData)return;const t=D('restoreTypeSelect').value;
+  try{
+    if(t==='single'){appData.semesters[tempRestoreData.semester]=tempRestoreData.data;appData.profile=tempRestoreData.profile;}
+    else if(t==='full'){appData=tempRestoreData;}
+    else if(t==='ganjil'||t==='genap'){appData.semesters[t==='ganjil'?'Ganjil':'Genap']=tempRestoreData.semesters[t==='ganjil'?'Ganjil':'Genap'];appData.profile=tempRestoreData.profile;}
+    else if(t==='legacy'){appData=tempRestoreData;if(!appData.semesters)appData.semesters={'Ganjil':{kelas:appData.kelas||[],currentClassId:appData.currentClassId,siswaPhotos:appData.siswaPhotos||{}},'Genap':{kelas:[],currentClassId:null,siswaPhotos:{}}};}
+    saveAllData();D('restoreModal').classList.remove('active');loadData();showMenu('dashboard');showToast('Data Berhasil Dipulihkan!','success');
+  }catch(e){showToast('Pemulihan Gagal!','error');}
+}
+
+function confirmResetData(){showConfirm('Factory Reset!','Seluruh data Guru, Kelas, Nilai, dan Siswa akan TERHAPUS PERMANEN dari memori HP/Laptop ini. Lanjutkan?',()=>{localStorage.removeItem('adminGuruData');window.location.reload();});}
+
+window.onload=init;
+</script>
+</body>
+</html>
